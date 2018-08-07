@@ -38,4 +38,7 @@ dependencies {
     implementation files('libs/jcore-android-1.2.1.jar')
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation 'com.lzy.widget:imagepicker:0.6.1'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }
