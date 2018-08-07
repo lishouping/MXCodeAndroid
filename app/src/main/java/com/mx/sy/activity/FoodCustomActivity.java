@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
@@ -17,9 +19,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IInterface;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -39,6 +44,7 @@ import com.mx.sy.adapter.DishesNameAdapter;
 import com.mx.sy.adapter.ShoppingCarAdapter;
 import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseActivity;
+import com.mx.sy.common.SearchView;
 import com.mx.sy.utils.SendMessage;
 
 /**
@@ -64,6 +70,7 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 
 	private ImageView imgshopingcar;// 购物车按钮
 	private FrameLayout fram_shopingcar;
+	private SearchView edit_search_food;
 
 	private ListView lv_shcar;
 	private List<HashMap<String, String>> shopcarList;
@@ -181,6 +188,8 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 
 		lv_shcar = $(R.id.lv_shcar);
 
+		edit_search_food = $(R.id.edit_search_food);
+
 		inActivity = this;
 	}
 
@@ -251,6 +260,9 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 		btn_place_order.setOnClickListener(this);
 		imgshopingcar.setOnClickListener(this);
 		lin_delshpingcar.setOnClickListener(this);
+		edit_search_food.addTextChangedListener(editclick);
+		edit_search_food.setImeOptions(EditorInfo.IME_ACTION_SEND);
+		edit_search_food.setOnEditorActionListener(onEditorActionListener);
 	}
 
 	@Override
@@ -676,6 +688,44 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 			startActivityForResult(intent, 104);
 		}
 	}
+	private TextWatcher editclick = new TextWatcher() {
+
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+		}
+
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+		}
+
+		//一般我们都是在这个里面进行我们文本框的输入的判断，上面两个方法用到的很少
+		@Override
+		public void afterTextChanged(Editable s) {
+			String money = edit_search_food.getText().toString();
+			Log.d("------",money);
+		}
+	};
+
+	private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
+		@Override
+		public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+			if (actionId == EditorInfo.IME_ACTION_SEARCH){//搜索按键action
+				String money = edit_search_food.getText().toString();
+				Log.d("------",money);
+				return true;
+			}
+			return false;
+		}
+	};
+
+
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub

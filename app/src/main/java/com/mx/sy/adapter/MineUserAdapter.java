@@ -35,7 +35,8 @@ public class MineUserAdapter extends CommonBaseAdapter<HashMap<String, Object>>{
 	@Override
 	public void convert(CommonViewHolder holder, HashMap<String, Object> bean) {
 		// TODO Auto-generated method stub
-		if (holder.getPosition()==3) {
+		if (holder.getPosition()==3||holder.getPosition()==7
+				) {
 			LinearLayout linearLay = holder.getView(R.id.lin_headminuser);
 			linearLay.setVisibility(View.VISIBLE);
 		}
