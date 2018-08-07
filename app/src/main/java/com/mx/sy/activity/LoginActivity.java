@@ -14,6 +14,9 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.mx.sy.R;
 import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseActivity;
@@ -24,6 +27,8 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import io.reactivex.functions.Consumer;
 
@@ -45,10 +50,11 @@ public class LoginActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_login:
-			if (isNull()) {
-				// 调用登录方法
-				userLogin();
-			}
+//			if (isNull()) {
+//				// 调用登录方法
+//				userLogin();
+//			}
+
 			break;
 
 		default:
