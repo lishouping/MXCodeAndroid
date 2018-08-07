@@ -50,13 +50,11 @@ public class LoginActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.btn_login:
-//			if (isNull()) {
-//				// 调用登录方法
-//				userLogin();
-//			}
-
+			if (isNull()) {
+				// 调用登录方法
+				userLogin();
+			}
 			break;
-
 		default:
 			break;
 		}
