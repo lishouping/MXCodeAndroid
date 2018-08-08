@@ -316,7 +316,7 @@ public class OrderDetailedActivity extends BaseActivity {
 					AlertDialog.Builder ad1 = new AlertDialog.Builder(
 							OrderDetailedActivity.this);
 					ad1.setTitle("减菜");
-					ad1.setIcon(android.R.drawable.ic_dialog_info);
+					ad1.setIcon(R.drawable.ic_launcher);
 					ad1.setView(textEntryView);
 					ad1.setPositiveButton(
 							"保存",
