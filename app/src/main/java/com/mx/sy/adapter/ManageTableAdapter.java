@@ -18,15 +18,16 @@ import java.util.List;
  * @date 2018/8/8 11:20
  * @see
  */
-public class ManageTablePartitionAdapter extends BaseQuickAdapter<HashMap<String, String>, BaseViewHolder> {
-    public ManageTablePartitionAdapter(int layoutResId, @Nullable List<HashMap<String, String>> data) {
+public class ManageTableAdapter extends BaseQuickAdapter<HashMap<String, String>, BaseViewHolder> {
+    public ManageTableAdapter(int layoutResId, @Nullable List<HashMap<String, String>> data) {
         super(layoutResId, data);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, HashMap<String, String> item) {
-        helper.setText(R.id.tv_item_num, helper.getLayoutPosition() + 1 + "");
-        helper.setText(R.id.tv_partition_name, "分区名称:一楼");
-        helper.setText(R.id.tv_crate_time, "创建时间:2018-11-22");
+        helper.setText(R.id.tv_tabel_name, "桌台名:23");
+        helper.setText(R.id.tv_table_partion, "分区名称:一楼");
+        helper.setText(R.id.tv_table_state, "桌台状态:使用中");
+        helper.setText(R.id.tv_table_create_time, "创建时间:2018-05-12");
     }
 }

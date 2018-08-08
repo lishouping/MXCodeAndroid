@@ -42,4 +42,5 @@ dependencies {
     implementation 'com.lzy.widget:imagepicker:0.6.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.contrarywind:Android-PickerView:4.1.6'
 }

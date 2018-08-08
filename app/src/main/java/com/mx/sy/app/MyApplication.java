@@ -30,23 +30,6 @@ public class MyApplication extends Application {
 		imagePicker.setImageLoader(new PicassoImageLoader());   //设置图片加载器
 		imagePicker.setMultiMode(false); //单选false 多选true
 		imagePicker.setCrop(false);        //允许裁剪（单选才有效）
-
-//		图片选择器
-// 		Intent intent = new Intent(this, ImageGridActivity.class);
-//		startActivityForResult(intent, 1);
-//		@Override
-//		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//			super.onActivityResult(requestCode, resultCode, data);
-//			if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-//				if (data != null && requestCode == 1) {
-//					ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-//					Log.d("--------",images.size()+"");
-//
-//				} else {
-//					Toast.makeText(this, "没有数据", Toast.LENGTH_SHORT).show();
-//				}
-//			}
-//		}
 	}
 
 	@Override

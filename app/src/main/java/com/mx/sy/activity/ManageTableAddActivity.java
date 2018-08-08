@@ -7,28 +7,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.builder.TimePickerBuilder;
-import com.bigkoo.pickerview.listener.OnTimeSelectListener;
-import com.bigkoo.pickerview.view.TimePickerView;
 import com.mx.sy.R;
 import com.mx.sy.base.BaseActivity;
 import com.mx.sy.dialog.SweetAlertDialog;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-public class ManageEmployeeAddActivity extends BaseActivity {
+public class ManageTableAddActivity extends BaseActivity {
 
     private LinearLayout ll_back;
     private TextView tv_title;
-    private Button select_persontype;
+    private Button select_table_partition;
     private Button btn_sumbit;
     private AlertDialog alertDialog;
-    private EditText et_person_name, et_person_number, et_phone;
+    private EditText et_table_name, et_table_number, et_phone;
 
     @Override
     public void widgetClick(View v) {
@@ -59,10 +52,10 @@ public class ManageEmployeeAddActivity extends BaseActivity {
                                     }
                                 }).show();
                 break;
-            case R.id.select_persontype:
-                final String[] items = {"服务员", "店长"};
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageEmployeeAddActivity.this);
-                alertBuilder.setTitle("请选择类型");
+            case R.id.select_table_partition:
+                final String[] items = {"1楼", "2楼"};
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageTableAddActivity.this);
+                alertBuilder.setTitle("请选择分区");
                 alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
@@ -94,18 +87,17 @@ public class ManageEmployeeAddActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_manage_employeeadd;
+        return R.layout.activity_manage_tableadd;
     }
 
     @Override
     public void initView(View view) {
         ll_back = $(R.id.ll_back);
         tv_title = $(R.id.tv_title);
-        select_persontype = $(R.id.select_persontype);
+        select_table_partition = $(R.id.select_table_partition);
         btn_sumbit = $(R.id.btn_sumbit);
-        et_person_name = $(R.id.et_person_name);
-        et_person_number = $(R.id.et_person_number);
-        et_phone = $(R.id.et_person_phone);
+        et_table_name = $(R.id.et_table_name);
+        et_table_number = $(R.id.et_table_number);
     }
 
     @Override
@@ -116,7 +108,7 @@ public class ManageEmployeeAddActivity extends BaseActivity {
     @Override
     public void setListener() {
         ll_back.setOnClickListener(this);
-        select_persontype.setOnClickListener(this);
+        select_table_partition.setOnClickListener(this);
         btn_sumbit.setOnClickListener(this);
     }
 
