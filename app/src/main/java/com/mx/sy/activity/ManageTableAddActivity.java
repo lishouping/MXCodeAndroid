@@ -4,15 +4,24 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.mx.sy.R;
+import com.mx.sy.adapter.DishesSelectClassAdapter;
 import com.mx.sy.base.BaseActivity;
+import com.mx.sy.common.RecyclerViewDivider;
 import com.mx.sy.dialog.SweetAlertDialog;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ManageTableAddActivity extends BaseActivity {
 
@@ -23,6 +32,10 @@ public class ManageTableAddActivity extends BaseActivity {
     private AlertDialog alertDialog;
     private EditText et_table_name, et_table_number, et_phone;
 
+    List<HashMap<String, String>> classList;
+    View view;
+    private DishesSelectClassAdapter dishesSelectClassAdapter;
+    private RecyclerView mrv_dialog;
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
@@ -53,21 +66,28 @@ public class ManageTableAddActivity extends BaseActivity {
                                 }).show();
                 break;
             case R.id.select_table_partition:
-                final String[] items = {"1楼", "2楼"};
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageTableAddActivity.this);
-                alertBuilder.setTitle("请选择分区");
-                alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
+                view = getLayoutInflater().inflate(R.layout.dialog_rv, null);
+                AlertDialog.Builder alertBuilder1 = new AlertDialog.Builder(ManageTableAddActivity.this);
+                alertBuilder1.setTitle("请选择分类");
+                alertBuilder1.setView(view);
+                alertDialog = alertBuilder1.create();
+
+
+                mrv_dialog = view.findViewById(R.id.rv_dialog);
+                mrv_dialog.setLayoutManager(new LinearLayoutManager(this));
+                mrv_dialog.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
+
+                DishesSelectClassAdapter dishesSelectClassAdapter = new DishesSelectClassAdapter(R.layout
+                        .item_disclass, classList);
+                mrv_dialog.setAdapter(dishesSelectClassAdapter);
+                dishesSelectClassAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
-                    public void onClick(DialogInterface arg0, int index) {
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        select_table_partition.setText(classList.get(position)+"");
                         alertDialog.dismiss();
-                        if (index == 0) {
-
-                        } else if (index == 1) {
-
-                        }
                     }
                 });
-                alertDialog = alertBuilder.create();
+
                 alertDialog.show();
                 break;
             default:
@@ -102,7 +122,11 @@ public class ManageTableAddActivity extends BaseActivity {
 
     @Override
     protected void initdata() {
-        tv_title.setText("新增员工");
+        tv_title.setText("新增桌台");
+        classList = new ArrayList<>();
+        classList.add(new HashMap<String, String>());
+        classList.add(new HashMap<String, String>());
+        classList.add(new HashMap<String, String>());
     }
 
     @Override
