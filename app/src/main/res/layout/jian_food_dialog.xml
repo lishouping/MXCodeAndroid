@@ -15,5 +15,12 @@
         android:minHeight="45dp"
         android:hint="请输入要减少数量"
         android:textSize="18sp" />
+	<EditText
+		android:id="@+id/text_edit1"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:minHeight="45dp"
+		android:hint="请输入要减少数量"
+		android:textSize="18sp" />
 
 </LinearLayout>
