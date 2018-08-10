@@ -196,10 +196,10 @@ public class OrderAdapter extends CommonBaseAdapter<HashMap<String, String>> {
 							// TODO Auto-generated method stub
 							new SweetAlertDialog(context,
 									SweetAlertDialog.NORMAL_TYPE)
-									.setTitleText("选择打印方式!")
+									.setTitleText("确认打印订单吗?")
 									// .setContentText("Won't be able to recover this file!")
-									.setCancelText("网络")
-									.setConfirmText("蓝牙")
+									.setCancelText("取消")
+									.setConfirmText("确定")
 									.showCancelButton(true)
 									.setConfirmClickListener(
 											new SweetAlertDialog.OnSweetClickListener() {
@@ -207,10 +207,12 @@ public class OrderAdapter extends CommonBaseAdapter<HashMap<String, String>> {
 												public void onClick(
 														SweetAlertDialog sDialog) {
 													sDialog.cancel();
-													Intent intent = new Intent(context,
-															PrintActivity.class);
-													intent.putExtra("order_num", bean.get("order_num"));
-													context.startActivity(intent);
+													getPrintContentByOrder(bean
+															.get("order_id"), 0);
+//													Intent intent = new Intent(context,
+//															PrintActivity.class);
+//													intent.putExtra("order_num", bean.get("order_num"));
+//													context.startActivity(intent);
 												}
 											})
 									.setCancelClickListener(
@@ -219,8 +221,6 @@ public class OrderAdapter extends CommonBaseAdapter<HashMap<String, String>> {
 												public void onClick(
 														SweetAlertDialog sDialog) {
 													sDialog.cancel();
-													getPrintContentByOrder(bean
-															.get("order_id"), 0);
 												}
 											}).show();
 						}

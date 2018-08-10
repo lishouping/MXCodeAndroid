@@ -254,20 +254,21 @@ public class OrderDetailedActivity extends BaseActivity {
 		case R.id.btn_dayin_order:
 			new SweetAlertDialog(OrderDetailedActivity.this,
 					SweetAlertDialog.NORMAL_TYPE)
-					.setTitleText("选择打印方式!")
+					.setTitleText("确认打印订单吗?")
 					// .setContentText("Won't be able to recover this file!")
-					.setCancelText("网络")
-					.setConfirmText("蓝牙")
+					.setCancelText("取消")
+					.setConfirmText("确定")
 					.showCancelButton(true)
 					.setConfirmClickListener(
 							new SweetAlertDialog.OnSweetClickListener() {
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									sDialog.cancel();
-									Intent intent = new Intent(getApplicationContext(),
-											PrintActivity.class);
-									intent.putExtra("order_num", order_num);
-									startActivity(intent);
+									getPrintContentByOrder(0);
+//									Intent intent = new Intent(getApplicationContext(),
+//											PrintActivity.class);
+//									intent.putExtra("order_num", order_num);
+//									startActivity(intent);
 								}
 							})
 					.setCancelClickListener(
@@ -275,7 +276,7 @@ public class OrderDetailedActivity extends BaseActivity {
 								@Override
 								public void onClick(SweetAlertDialog sDialog) {
 									sDialog.cancel();
-									getPrintContentByOrder(0);
+
 								}
 							}).show();
 			break;
@@ -343,6 +344,7 @@ public class OrderDetailedActivity extends BaseActivity {
 					ad1.setNegativeButton(
 							"关闭",
 							new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(
 										DialogInterface dialog,
 										int i) {
@@ -414,6 +416,7 @@ public class OrderDetailedActivity extends BaseActivity {
 										ad1.setNegativeButton(
 												"关闭",
 												new DialogInterface.OnClickListener() {
+													@Override
 													public void onClick(
 															DialogInterface dialog,
 															int i) {
