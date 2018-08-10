@@ -21,6 +21,7 @@
 		android:layout_height="wrap_content"
 		android:minHeight="45dp"
 		android:hint="请输入要减少数量"
+		android:visibility="gone"
 		android:textSize="18sp" />
 
 </LinearLayout>
