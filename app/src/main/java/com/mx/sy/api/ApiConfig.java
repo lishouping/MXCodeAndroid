@@ -86,4 +86,11 @@ public class ApiConfig {
 	public static String SERVICEUPDATE = "/app/apk";
 	// 获取支付图片 二维码
 	public static String PAYIMAGE = "/images";
+	// 2.0版本新增接口
+	// 更新店铺
+	public static String UPDATESHOP = "/shop/updateShop2";
+
+
+
+
 }

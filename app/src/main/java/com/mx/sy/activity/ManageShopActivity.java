@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -22,13 +23,23 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.mx.sy.R;
+import com.mx.sy.api.ApiConfig;
+import com.mx.sy.app.MyApplication;
 import com.mx.sy.base.BaseActivity;
 import com.mx.sy.dialog.SweetAlertDialog;
 
+import org.apache.http.Header;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +64,12 @@ public class ManageShopActivity extends BaseActivity {
     private Button btn_sumbit;
     private Button btn_chef_work, btn_checkout_time;
     private ImageView img_shop, img_wx, img_alpay;
+
+    private SharedPreferences preferences;
+    private String shop_id;
+    private String logoFile = "";
+    private String wxFile = "";
+    private String alpayFile = "";
 
     @Override
     public void widgetClick(View v) {
@@ -102,8 +119,8 @@ public class ManageShopActivity extends BaseActivity {
                                 new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
-
-
+                                        updateShopInfo();
+                                        sDialog.cancel();
                                     }
                                 })
                         .setCancelClickListener(
@@ -180,6 +197,8 @@ public class ManageShopActivity extends BaseActivity {
     @Override
     protected void initdata() {
         tv_title.setText("店铺管理");
+        preferences = getSharedPreferences("userinfo",
+                LoginActivity.MODE_PRIVATE);
     }
 
     @Override
@@ -199,7 +218,7 @@ public class ManageShopActivity extends BaseActivity {
 
     @Override
     public void doBusiness(Context mContext) {
-
+        getShopTableInfo();
     }
 
     /**
@@ -238,22 +257,174 @@ public class ManageShopActivity extends BaseActivity {
             if (data != null && requestCode == 1) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker
                         .EXTRA_RESULT_ITEMS);
+                logoFile = images.get(0).path;
                 Bitmap bitmap = BitmapFactory.decodeFile(images.get(0).path);
                 img_shop.setImageBitmap(bitmap);
-            } else if (data != null && requestCode == 2){
+            } else if (data != null && requestCode == 2) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker
                         .EXTRA_RESULT_ITEMS);
+                wxFile = images.get(0).path;
                 Bitmap bitmap = BitmapFactory.decodeFile(images.get(0).path);
                 img_wx.setImageBitmap(bitmap);
-            }else if (data != null && requestCode == 3 ){
+            } else if (data != null && requestCode == 3) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker
                         .EXTRA_RESULT_ITEMS);
+                alpayFile = images.get(0).path;
                 Bitmap bitmap = BitmapFactory.decodeFile(images.get(0).path);
                 img_alpay.setImageBitmap(bitmap);
-            }else {
+            } else {
                 Toast.makeText(this, "没有数据", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    // 查询店铺信息
+    public void getShopTableInfo() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.GETSHOPINFO + "/"
+                + preferences.getString("shop_id", "");
+        client.get(url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            JSONObject jsonObject2 = new JSONObject(jsonObject.getString("DATA"));
+                            shop_id = jsonObject2.getString("shop_id");
+                            //店铺名称
+                            String shop_name = jsonObject2.getString("shop_name");
+                            mEtShopname.setText(shop_name);
+                            //店铺地址
+                            String address = jsonObject2.getString("address");
+                            mEtAddress.setText(address);
+                            //店铺老板
+                            String shop_owner_name = jsonObject2.getString("shop_owner_name");
+                            mEtShoppersonname.setText(shop_owner_name);
+                            //老板电话
+                            String shop_owner_phone = jsonObject2.getString("shop_owner_phone");
+                            mEtPhone.setText(shop_owner_phone);
+                            // 店铺简介
+                            String introduction = jsonObject2.getString("introduction");
+                            mEtInfo.setText(introduction);
+                            // 商家公告
+                            String notice = jsonObject2.getString("notice");
+                            mEtNotice.setText(notice);
+                            // 营业开始时间
+                            String begin_time = jsonObject2.getString("begin_time");
+                            mBtnStartTime.setText(begin_time);
+                            // 营业结束时间
+                            String end_time = jsonObject2.getString("end_time");
+                            mBtnEndTime.setText(end_time);
+                            //微信支付图片
+                            String wechat_img = jsonObject2.getString("wechat_img");
+                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + wechat_img, img_wx, true);
+                            //支付宝支付图片
+                            String alipay_img = jsonObject2.getString("alipay_img");
+                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + alipay_img, img_alpay, true);
+                            // 图标
+                            String icon = jsonObject2.getString("icon");
+                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + icon, img_shop, true);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // 更新店铺
+    public void updateShopInfo() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.UPDATESHOP;
+        RequestParams params = new RequestParams();
+        params.put("shop_id",shop_id);
+        params.put("shop_name",mEtShopname.getText()+"");
+        params.put("address",mEtAddress.getText()+"");
+        params.put("shop_owner_name",mEtShoppersonname.getText()+"");
+        params.put("shop_owner_phone",mEtPhone.getText()+"");
+        params.put("introduction",mEtInfo.getText()+"");
+        params.put("notice",mEtNotice.getText()+"");
+        params.put("begin_time",mBtnStartTime.getText()+"");
+        params.put("end_time",mBtnEndTime.getText()+"");
+        if (!logoFile.equals("")){
+            File file = new File(logoFile);
+            try {
+                params.put("file",file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!wxFile.equals("")){
+            File file = new File(wxFile);
+            try {
+                params.put("wechat_img_file",file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!alpayFile.equals("")){
+            File file = new File(alpayFile);
+            try {
+                params.put("alipay_img_file",file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        client.post(url,params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")){
+                            Toast.makeText(ManageShopActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }
