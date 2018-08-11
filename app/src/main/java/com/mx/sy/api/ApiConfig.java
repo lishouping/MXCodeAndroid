@@ -89,7 +89,14 @@ public class ApiConfig {
 	// 2.0版本新增接口
 	// 更新店铺
 	public static String UPDATESHOP = "/shop/updateShop2";
-
+	// 查询服务员列表
+	public static String GETWAITER = "/waiter/selectWaiters";
+	// 新增服务员
+	public static String ADDWAITER = "/waiter/addWaiter";
+	// 冻结、解冻
+	public static String CHANGEWAITER = "/waiter/changWaiterStatus";
+	// 删除ID服务员
+	public static String DELWAITER = "/waiter/deleteWaiter";
 
 
 
