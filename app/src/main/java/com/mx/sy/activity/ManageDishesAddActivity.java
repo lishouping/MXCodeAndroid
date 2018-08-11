@@ -165,6 +165,9 @@ public class ManageDishesAddActivity extends BaseActivity {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         alertDialog.dismiss();
+                        foodClassId = classList.get(position).get("category_id");
+                        foodClassName = classList.get(position).get("classname");
+                        select_dis_class.setText(foodClassName);
                     }
                 });
 
