@@ -36,6 +36,8 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +55,7 @@ public class ManageDishesActivity extends BaseActivity {
     private AlertDialog alertDialog;
     private LinearLayout lin_class;
 
-    private List<HashMap<String,String>> classList;
+    private List<HashMap<String, String>> classList;
     View view;
     private DishesSelectClassAdapter dishesSelectClassAdapter;
     private RecyclerView mrv_dialog;
@@ -68,7 +70,7 @@ public class ManageDishesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.lin_class:
-                view = getLayoutInflater().inflate(R.layout.dialog_rv,null);
+                view = getLayoutInflater().inflate(R.layout.dialog_rv, null);
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageDishesActivity.this);
                 alertBuilder.setTitle("请选择分类");
                 alertBuilder.setView(view);
@@ -79,7 +81,7 @@ public class ManageDishesActivity extends BaseActivity {
                 mrv_dialog.setLayoutManager(new LinearLayoutManager(this));
                 mrv_dialog.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
 
-                dishesSelectClassAdapter = new DishesSelectClassAdapter(R.layout.item_disclass,classList);
+                dishesSelectClassAdapter = new DishesSelectClassAdapter(R.layout.item_disclass, classList);
                 mrv_dialog.setAdapter(dishesSelectClassAdapter);
                 dishesSelectClassAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
@@ -92,8 +94,8 @@ public class ManageDishesActivity extends BaseActivity {
 
                 break;
             case R.id.ll_right:
-                Intent intent = new Intent(this,ManageDishesAddActivity.class);
-                intent.putExtra("pagetype","0");
+                Intent intent = new Intent(this, ManageDishesAddActivity.class);
+                intent.putExtra("pagetype", "0");
                 startActivity(intent);
                 break;
             default:
@@ -138,13 +140,13 @@ public class ManageDishesActivity extends BaseActivity {
         rv_ma_dishes.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
 
         mapList = new ArrayList<>();
-        manageDishesAdapter = new ManageDishesAdapter(R.layout.item_dishes,mapList);
+        manageDishesAdapter = new ManageDishesAdapter(R.layout.item_dishes, mapList);
         rv_ma_dishes.setAdapter(manageDishesAdapter);
 
         manageDishesAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                final String[] items = {"售罄","修改","删除"};
+            public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
+                final String[] items = {"售罄", "修改", "删除"};
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageDishesActivity.this);
                 alertBuilder.setTitle("请选择操作");
                 alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
@@ -153,6 +155,14 @@ public class ManageDishesActivity extends BaseActivity {
                         alertDialog.dismiss();
                         if (index == 0) {
 
+                        }else if (index==1){
+                            Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
+                            intent.putExtra("pagetype", "2");
+                            intent.putExtra("goods_id",mapList.get(position).get("good_id"));
+                            intent.putExtra("category_name",mapList.get(position).get("category_name"));
+                            startActivity(intent);
+                        }else if (index==2){
+                            delFood(mapList.get(position).get("good_id"));
                         }
                     }
                 });
@@ -163,8 +173,10 @@ public class ManageDishesActivity extends BaseActivity {
         manageDishesAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(ManageDishesActivity.this,ManageDishesAddActivity.class);
-                intent.putExtra("pagetype","1");
+                Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
+                intent.putExtra("pagetype", "1");
+                intent.putExtra("goods_id",mapList.get(position).get("good_id"));
+                intent.putExtra("category_name",mapList.get(position).get("category_name"));
                 startActivity(intent);
             }
         });
@@ -186,8 +198,18 @@ public class ManageDishesActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
         selectCategory();
-        selectFood();
     }
+
+    @Override
+    protected void onResume() {
+        if (mapList.size() > 0) {
+            mapList.clear();
+            manageDishesAdapter.notifyDataSetChanged();
+        }
+        selectFood();
+        super.onResume();
+    }
+
     private TextWatcher editclick = new TextWatcher() {
 
 
@@ -208,16 +230,16 @@ public class ManageDishesActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             String money = edit_search_food.getText().toString();
-            Log.d("------",money);
+            Log.d("------", money);
         }
     };
 
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH){//搜索按键action
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
                 String money = edit_search_food.getText().toString();
-                Log.d("------",money);
+                Log.d("------", money);
                 return true;
             }
             return false;
@@ -260,7 +282,7 @@ public class ManageDishesActivity extends BaseActivity {
                                 map.put("category_id", category_id);
                                 map.put("classname", category_name);
                                 map.put("category_status", category_status);
-                                map.put("create_time",create_time);
+                                map.put("create_time", create_time);
                                 classList.add(map);
                             }
                             dishesSelectClassAdapter.notifyDataSetChanged();
@@ -318,7 +340,7 @@ public class ManageDishesActivity extends BaseActivity {
                                 JSONArray array = new JSONArray(object
                                         .getString("goods_list"));
 
-                                for (int j=0;j<array.length();j++){
+                                for (int j = 0; j < array.length(); j++) {
                                     JSONObject object2 = array.getJSONObject(j);
                                     String goods_name = object2.getString("goods_name");// 菜品名
                                     String pre_price = object2.getString("pre_price");// 单价
@@ -328,7 +350,7 @@ public class ManageDishesActivity extends BaseActivity {
                                     map.put("goods_name", goods_name);
                                     map.put("pre_price", pre_price);
                                     map.put("good_id", good_id);
-                                    map.put("category_name",category_name);
+                                    map.put("category_name", category_name);
                                     mapList.add(map);
                                 }
 
@@ -359,6 +381,48 @@ public class ManageDishesActivity extends BaseActivity {
         });
     }
 
+    //删除菜品
+    public void delFood(String good_id) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.DELGOODS;
+        RequestParams params = new RequestParams();
+        params.put("good_id", good_id);
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            mapList.clear();
+                            manageDishesAdapter.notifyDataSetChanged();
+                            selectFood();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 }

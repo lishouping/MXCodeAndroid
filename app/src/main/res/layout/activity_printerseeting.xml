@@ -2,17 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
     <include layout="@layout/common_title" />
 
-    <Button
-        android:id="@+id/btn_print_test"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_yeallo_btnbg"
-        android:textSize="13sp"
-        android:textColor="#fff"
-		android:layout_margin="10dp"        
-        android:text="蓝牙打印测试" 
-     />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_print"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 </LinearLayout>

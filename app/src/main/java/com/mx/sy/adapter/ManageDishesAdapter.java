@@ -29,7 +29,7 @@ public class ManageDishesAdapter extends BaseQuickAdapter<HashMap<String, String
         helper.setText(R.id.tv_item_num, helper.getLayoutPosition() + 1 + "");
         helper.setText(R.id.tv_class_name, "名称:" + item.get("goods_name"));
         helper.setText(R.id.tv_crate_time, "分类:" + item.get("category_name"));
-        helper.setText(R.id.tv_class_state, "价格:" + item.get("pre_price"));
+        helper.setText(R.id.tv_class_state, "价格:" + item.get("pre_price") + "元");
         helper.addOnClickListener(R.id.ll_detail);
     }
 }

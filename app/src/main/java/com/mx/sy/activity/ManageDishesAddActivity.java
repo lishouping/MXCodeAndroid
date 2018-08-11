@@ -30,6 +30,7 @@ import com.mx.sy.R;
 import com.mx.sy.adapter.DishesSelectClassAdapter;
 import com.mx.sy.adapter.DishesSpecifAdapter;
 import com.mx.sy.api.ApiConfig;
+import com.mx.sy.app.MyApplication;
 import com.mx.sy.base.BaseActivity;
 import com.mx.sy.common.RecyclerViewDivider;
 import com.mx.sy.dialog.SweetAlertDialog;
@@ -80,6 +81,8 @@ public class ManageDishesAddActivity extends BaseActivity {
 
     private String imageUrl = "";
 
+    private String goods_id;
+    private String category_name;
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
@@ -98,20 +101,25 @@ public class ManageDishesAddActivity extends BaseActivity {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
                                         if (et_dis_name.getText().toString().equals("")) {
-                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品信息", Toast
+                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品名", Toast
                                                     .LENGTH_SHORT).show();
                                         } else if (foodClassId.equals("")) {
                                             Toast.makeText(ManageDishesAddActivity.this, "请选择菜品分类", Toast
                                                     .LENGTH_SHORT).show();
-                                        } else if (select_dis_class.getText().toString().equals("")) {
-                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品信息", Toast
-                                                    .LENGTH_SHORT).show();
                                         } else if (et_dis_price.getText().toString().equals("")) {
                                             Toast.makeText(ManageDishesAddActivity.this, "请填写菜品信息", Toast
                                                     .LENGTH_SHORT).show();
+                                        } else if (et_dis_discontent.getText().toString().equals("")) {
+                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品折扣", Toast
+                                                    .LENGTH_SHORT).show();
                                         } else {
                                             try {
-                                                addFood();
+                                                if (pagetype.equals("2")){
+                                                    updateFood();
+                                                }else if (pagetype.equals("0")){
+                                                    addFood();
+                                                }
+                                                sDialog.cancel();
                                             } catch (FileNotFoundException e) {
                                                 e.printStackTrace();
                                             }
@@ -158,7 +166,7 @@ public class ManageDishesAddActivity extends BaseActivity {
                 mrv_dialog.setLayoutManager(new LinearLayoutManager(this));
                 mrv_dialog.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
 
-                DishesSelectClassAdapter dishesSelectClassAdapter = new DishesSelectClassAdapter(R.layout
+                dishesSelectClassAdapter = new DishesSelectClassAdapter(R.layout
                         .item_disclass, classList);
                 mrv_dialog.setAdapter(dishesSelectClassAdapter);
                 dishesSelectClassAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -238,6 +246,9 @@ public class ManageDishesAddActivity extends BaseActivity {
         pagetype = intent.getStringExtra("pagetype");
         preferences = getSharedPreferences("userinfo",
                 LoginActivity.MODE_PRIVATE);
+        goods_id = intent.getStringExtra("goods_id");
+        category_name = intent.getStringExtra("category_name");
+
     }
 
     @Override
@@ -272,7 +283,7 @@ public class ManageDishesAddActivity extends BaseActivity {
     protected void initdata() {
         if ("0".equals(pagetype)) {
             tv_title.setText("添加菜品");
-        } else {
+        } else if ("1".equals(pagetype)){
             tv_title.setText("查看菜品");
             et_dis_name.setFocusable(false);
             et_dis_price.setFocusable(false);
@@ -281,6 +292,8 @@ public class ManageDishesAddActivity extends BaseActivity {
             select_dis_class.setEnabled(false);
             img_dic_class.setEnabled(false);
             btn_sumbit.setVisibility(View.GONE);
+        }else {
+            tv_title.setText("修改菜品");
         }
 
         classList = new ArrayList<>();
@@ -333,6 +346,9 @@ public class ManageDishesAddActivity extends BaseActivity {
     @Override
     public void doBusiness(Context mContext) {
         selectCategory();
+        if (pagetype.equals("1")||pagetype.equals("2")){
+            selectGoods();
+        }
     }
 
     @Override
@@ -440,6 +456,7 @@ public class ManageDishesAddActivity extends BaseActivity {
                         if (CODE.equals("1000")) {
                             Toast.makeText(getApplicationContext(), jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
@@ -458,5 +475,112 @@ public class ManageDishesAddActivity extends BaseActivity {
             }
         });
     }
+
+    //查询菜品
+    public void selectGoods() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.SELECTGOODS;
+        RequestParams params = new RequestParams();
+        params.put("goods_id", goods_id);
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            JSONObject jsonObject1 = new JSONObject(jsonObject
+                                    .getString("DATA"));
+
+                            String category_id = jsonObject1.getString("category_id");
+                            foodClassId = category_id;
+                            String goods_name  = jsonObject1.getString("goods_name");
+                            String pre_price  = jsonObject1.getString("pre_price");
+                            String discount  = jsonObject1.getString("discount");
+                            String img_url  = jsonObject1.getString("img_url");
+                            String introduction = jsonObject1.getString("introduction");
+                            et_dis_name.setText(goods_name);
+                            et_dis_price.setText(pre_price);
+                            et_dis_discontent.setText(discount);
+                            et_dis_prief.setText(introduction);
+                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + img_url, img_dic_class, true);
+
+                            select_dis_class.setText(category_name);
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    //修改菜品
+    public void updateFood() throws FileNotFoundException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.UPDETEGOODS;
+        RequestParams params = new RequestParams();
+        params.put("good_id",goods_id);
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        params.put("category_id", foodClassId);
+        params.put("goods_name", et_dis_name.getText().toString());
+        params.put("pre_price", et_dis_price.getText().toString());
+        params.put("discount", et_dis_discontent.getText().toString());
+        params.put("Introduction", et_dis_prief.getText().toString());
+        if (!imageUrl.equals("")) {
+            File file = new File(imageUrl);
+            params.put("file", file);
+        }
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
 }

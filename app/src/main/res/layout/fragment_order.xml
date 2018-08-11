@@ -3,122 +3,121 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sweet_dialog_bg_color"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <com.mx.sy.common.PullToRefreshView
-        android:id="@+id/pullrefresh_order"
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:layout_height="40dp"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal" >
+            android:id="@+id/lin_order_nomanage"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/sweet_dialog_bg_color"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/lin_order_nomanage"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/sweet_dialog_bg_color"
-                android:orientation="vertical" >
+                android:gravity="center">
 
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center" >
+                <TextView
+                    android:id="@+id/tv_order_nomanage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未处理"
+                    android:textColor="@color/main_bg_color"
+                    android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/tv_order_nomanage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="未处理"
-                        android:textSize="14sp"
-                        android:textColor="@color/main_bg_color" />
-
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/viw_order_nomanage"
-                    android:layout_width="fill_parent"
-                    android:layout_height="3dp"
-                    android:background="@color/main_bg_color" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lin_order_manageing"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center" >
-
-                    <TextView
-                        android:id="@+id/tv_order_manageing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="正在用餐"
-                        android:textSize="14sp"
-                        android:textColor="@color/sweet_tab_black" />
-
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/viw_order_manageing"
-                    android:layout_width="fill_parent"
-                    android:layout_height="3dp"
-                    android:background="@color/sweet_dialog_bg_color" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lin_order_managend"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical" >
-
-                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center" >
-
-                    <TextView
-                        android:id="@+id/tv_order_managend"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="已完成"
-                        android:textSize="14sp"
-                        android:textColor="@color/sweet_tab_black" />
-
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/viw_order_managend"
-                    android:layout_width="fill_parent"
-                    android:layout_height="3dp"
-                    android:background="@color/sweet_dialog_bg_color" />
-            </LinearLayout>
+            <View
+                android:id="@+id/viw_order_nomanage"
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"
+                android:background="@color/main_bg_color" />
         </LinearLayout>
-		<View 
-		    android:layout_width="fill_parent"
-		    android:layout_height="0.5dp"
-		    android:background="@color/circle_mine"
-		    />
+
+        <LinearLayout
+            android:id="@+id/lin_order_manageing"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_order_manageing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="正在用餐"
+                    android:textColor="@color/sweet_tab_black"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viw_order_manageing"
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"
+                android:background="@color/sweet_dialog_bg_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_order_managend"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_order_managend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已完成"
+                    android:textColor="@color/sweet_tab_black"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viw_order_managend"
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"
+                android:background="@color/sweet_dialog_bg_color" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/circle_mine" />
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/pullrefresh_order"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <ListView
             android:id="@+id/lv_order"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-        </ListView>
-    </com.mx.sy.common.PullToRefreshView>
-
+            android:layout_height="fill_parent"></ListView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

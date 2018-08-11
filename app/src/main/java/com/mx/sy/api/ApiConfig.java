@@ -119,4 +119,16 @@ public class ApiConfig {
 	public static String GETONETABLE = "/tableservice/getOneTable/";
 	// 添加菜品
 	public static String ADDGOODS = "/goods/addGoods";
+	// 删除菜品
+	public static String DELGOODS = "/goods/deleteGoods";
+	// 查询单个菜品
+	public static String SELECTGOODS = "/goods/selectGoods";
+	// 修改菜品
+	public static String UPDETEGOODS = "/goods/updateGoods";
+	// 新增打印机
+	public static String PRINTADD = "/printer/addprinter";
+	// 打印机删除
+	public static String PRINTDEL = "/printer/deletePrinter";
+	// 打印机删除
+	public static String PRINTUPDATE = "/printer/updatePrinter";
 }
