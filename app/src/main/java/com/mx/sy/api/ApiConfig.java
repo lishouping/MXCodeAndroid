@@ -117,6 +117,6 @@ public class ApiConfig {
 	public static String UPDATETABLE = "/tableservice/updateTable";
 	// 查询单个桌台
 	public static String GETONETABLE = "/tableservice/getOneTable/";
-	// 查询单个桌台
-	public static String GETONEAREA = "/tableservice/getOneArea/";
+	// 添加菜品
+	public static String ADDGOODS = "/goods/addGoods";
 }

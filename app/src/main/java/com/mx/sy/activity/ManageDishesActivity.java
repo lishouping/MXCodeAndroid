@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,12 +21,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
 import com.mx.sy.adapter.DishesSelectClassAdapter;
 import com.mx.sy.adapter.ManageDishesAdapter;
+import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseActivity;
 import com.mx.sy.common.RecyclerViewDivider;
 import com.mx.sy.common.SearchView;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,10 +53,12 @@ public class ManageDishesActivity extends BaseActivity {
     private AlertDialog alertDialog;
     private LinearLayout lin_class;
 
-    List<HashMap<String,String>> classList;
+    private List<HashMap<String,String>> classList;
     View view;
     private DishesSelectClassAdapter dishesSelectClassAdapter;
     private RecyclerView mrv_dialog;
+
+    private SharedPreferences preferences;
 
 
     @Override
@@ -68,7 +79,7 @@ public class ManageDishesActivity extends BaseActivity {
                 mrv_dialog.setLayoutManager(new LinearLayoutManager(this));
                 mrv_dialog.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
 
-                DishesSelectClassAdapter dishesSelectClassAdapter = new DishesSelectClassAdapter(R.layout.item_disclass,classList);
+                dishesSelectClassAdapter = new DishesSelectClassAdapter(R.layout.item_disclass,classList);
                 mrv_dialog.setAdapter(dishesSelectClassAdapter);
                 dishesSelectClassAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
@@ -92,7 +103,8 @@ public class ManageDishesActivity extends BaseActivity {
 
     @Override
     public void initParms(Bundle parms) {
-
+        preferences = getSharedPreferences("userinfo",
+                LoginActivity.MODE_PRIVATE);
     }
 
     @Override
@@ -118,16 +130,14 @@ public class ManageDishesActivity extends BaseActivity {
     @Override
     protected void initdata() {
         tv_title.setText("菜品管理");
+        classList = new ArrayList<>();
+
         iv_icon.setImageResource(R.drawable.ic_add);
 
         rv_ma_dishes.setLayoutManager(new LinearLayoutManager(this));
         rv_ma_dishes.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
 
         mapList = new ArrayList<>();
-        mapList.add(new HashMap<String, String>());
-        mapList.add(new HashMap<String, String>());
-        mapList.add(new HashMap<String, String>());
-        mapList.add(new HashMap<String, String>());
         manageDishesAdapter = new ManageDishesAdapter(R.layout.item_dishes,mapList);
         rv_ma_dishes.setAdapter(manageDishesAdapter);
 
@@ -158,12 +168,6 @@ public class ManageDishesActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
-        classList = new ArrayList<>();
-        classList.add(new HashMap<String, String>());
-        classList.add(new HashMap<String, String>());
-        classList.add(new HashMap<String, String>());
-
     }
 
     @Override
@@ -181,7 +185,8 @@ public class ManageDishesActivity extends BaseActivity {
 
     @Override
     public void doBusiness(Context mContext) {
-
+        selectCategory();
+        selectFood();
     }
     private TextWatcher editclick = new TextWatcher() {
 
@@ -218,5 +223,142 @@ public class ManageDishesActivity extends BaseActivity {
             return false;
         }
     };
+
+    // // 查询菜品分类(包含菜品)
+    public void selectCategory() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.SELECTCATEGORY_URL + "/"
+                + preferences.getString("shop_id", "");
+        RequestParams params = new RequestParams();
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        client.get(url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            dissmissDilog();
+                            JSONArray jsonArray = new JSONArray(jsonObject
+                                    .getString("DATA"));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                String category_id = object
+                                        .getString("category_id");
+                                String category_name = object
+                                        .getString("category_name");
+                                String category_status = object
+                                        .getString("category_status");
+                                String create_time = object.getString("create_time");
+                                HashMap<String, String> map = new HashMap<String, String>();
+                                map.put("category_id", category_id);
+                                map.put("classname", category_name);
+                                map.put("category_status", category_status);
+                                map.put("create_time",create_time);
+                                classList.add(map);
+                            }
+                            dishesSelectClassAdapter.notifyDataSetChanged();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // // 查询菜品分类(包含菜品)
+    public void selectFood() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.SELECTCATEGORY_URL + "/"
+                + preferences.getString("shop_id", "");
+        RequestParams params = new RequestParams();
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        client.get(url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            dissmissDilog();
+                            JSONArray jsonArray = new JSONArray(jsonObject
+                                    .getString("DATA"));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                String category_id = object
+                                        .getString("category_id");
+                                String category_name = object
+                                        .getString("category_name");
+                                String category_status = object
+                                        .getString("category_status");
+
+                                JSONArray array = new JSONArray(object
+                                        .getString("goods_list"));
+
+                                for (int j=0;j<array.length();j++){
+                                    JSONObject object2 = array.getJSONObject(j);
+                                    String goods_name = object2.getString("goods_name");// 菜品名
+                                    String pre_price = object2.getString("pre_price");// 单价
+                                    String good_id = object2.getString("good_id");// 商品id
+
+                                    HashMap<String, String> map = new HashMap<String, String>();
+                                    map.put("goods_name", goods_name);
+                                    map.put("pre_price", pre_price);
+                                    map.put("good_id", good_id);
+                                    map.put("category_name",category_name);
+                                    mapList.add(map);
+                                }
+
+                            }
+                            manageDishesAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
 }

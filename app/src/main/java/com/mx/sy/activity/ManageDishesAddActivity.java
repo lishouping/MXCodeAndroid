@@ -4,9 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,17 +20,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.mx.sy.R;
 import com.mx.sy.adapter.DishesSelectClassAdapter;
 import com.mx.sy.adapter.DishesSpecifAdapter;
+import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseActivity;
 import com.mx.sy.common.RecyclerViewDivider;
 import com.mx.sy.dialog.SweetAlertDialog;
 
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,8 +70,15 @@ public class ManageDishesAddActivity extends BaseActivity {
      * 菜品规格
      */
     private RecyclerView rv_spcif;
-    private List<HashMap<String,String>> msplist;
+    private List<HashMap<String, String>> msplist;
     private DishesSpecifAdapter dishesSpecifAdapter;
+
+    private SharedPreferences preferences;
+
+    private String foodClassId = "";
+    private String foodClassName = "";
+
+    private String imageUrl = "";
 
     @Override
     public void widgetClick(View v) {
@@ -81,7 +97,25 @@ public class ManageDishesAddActivity extends BaseActivity {
                                 new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
-
+                                        if (et_dis_name.getText().toString().equals("")) {
+                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品信息", Toast
+                                                    .LENGTH_SHORT).show();
+                                        } else if (foodClassId.equals("")) {
+                                            Toast.makeText(ManageDishesAddActivity.this, "请选择菜品分类", Toast
+                                                    .LENGTH_SHORT).show();
+                                        } else if (select_dis_class.getText().toString().equals("")) {
+                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品信息", Toast
+                                                    .LENGTH_SHORT).show();
+                                        } else if (et_dis_price.getText().toString().equals("")) {
+                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品信息", Toast
+                                                    .LENGTH_SHORT).show();
+                                        } else {
+                                            try {
+                                                addFood();
+                                            } catch (FileNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
 
                                     }
                                 })
@@ -152,9 +186,9 @@ public class ManageDishesAddActivity extends BaseActivity {
                         .inflate(
                                 R.layout.jian_food_dialog,
                                 null);
-                final EditText textjianshao =  textEntryView
+                final EditText textjianshao = textEntryView
                         .findViewById(R.id.text_editjiannumbe);
-                final EditText textjianshao1 =  textEntryView
+                final EditText textjianshao1 = textEntryView
                         .findViewById(R.id.text_edit1);
                 textjianshao.setHint("请输入规格名");
                 textjianshao1.setVisibility(View.VISIBLE);
@@ -199,6 +233,8 @@ public class ManageDishesAddActivity extends BaseActivity {
         Intent intent = getIntent();
         //0 表示添加 1表示详情
         pagetype = intent.getStringExtra("pagetype");
+        preferences = getSharedPreferences("userinfo",
+                LoginActivity.MODE_PRIVATE);
     }
 
     @Override
@@ -223,6 +259,7 @@ public class ManageDishesAddActivity extends BaseActivity {
         et_dis_prief = $(R.id.et_dis_prief);
         img_dic_class = $(R.id.img_dic_class);
         rv_spcif = $(R.id.rv_spcif);
+        rv_spcif.setVisibility(View.GONE);
         ll_right = $(R.id.ll_right);
         iv_icon = $(R.id.iv_icon);
         iv_icon.setImageResource(R.drawable.ic_add);
@@ -230,9 +267,9 @@ public class ManageDishesAddActivity extends BaseActivity {
 
     @Override
     protected void initdata() {
-        if ("0".equals(pagetype)){
+        if ("0".equals(pagetype)) {
             tv_title.setText("添加菜品");
-        }else {
+        } else {
             tv_title.setText("查看菜品");
             et_dis_name.setFocusable(false);
             et_dis_price.setFocusable(false);
@@ -244,9 +281,6 @@ public class ManageDishesAddActivity extends BaseActivity {
         }
 
         classList = new ArrayList<>();
-        classList.add(new HashMap<String, String>());
-        classList.add(new HashMap<String, String>());
-        classList.add(new HashMap<String, String>());
 
         msplist = new ArrayList<>();
         msplist.add(new HashMap<String, String>());
@@ -256,7 +290,7 @@ public class ManageDishesAddActivity extends BaseActivity {
         rv_spcif.setLayoutManager(new LinearLayoutManager(this));
         rv_spcif.addItemDecoration(new RecyclerViewDivider(this, LinearLayoutManager.VERTICAL));
 
-        dishesSpecifAdapter = new DishesSpecifAdapter(R.layout.item_tablepartition,msplist);
+        dishesSpecifAdapter = new DishesSpecifAdapter(R.layout.item_tablepartition, msplist);
         rv_spcif.setAdapter(dishesSpecifAdapter);
         dishesSpecifAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -295,7 +329,7 @@ public class ManageDishesAddActivity extends BaseActivity {
 
     @Override
     public void doBusiness(Context mContext) {
-
+        selectCategory();
     }
 
     @Override
@@ -305,6 +339,7 @@ public class ManageDishesAddActivity extends BaseActivity {
             if (data != null && requestCode == 1) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker
                         .EXTRA_RESULT_ITEMS);
+                imageUrl = images.get(0).path;
                 Bitmap bitmap = BitmapFactory.decodeFile(images.get(0).path);
                 img_dic_class.setImageBitmap(bitmap);
             } else {
@@ -313,5 +348,112 @@ public class ManageDishesAddActivity extends BaseActivity {
         }
     }
 
+    // // 查询菜品分类(包含菜品)
+    public void selectCategory() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.SELECTCATEGORY_URL + "/"
+                + preferences.getString("shop_id", "");
+        RequestParams params = new RequestParams();
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        client.get(url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            dissmissDilog();
+                            JSONArray jsonArray = new JSONArray(jsonObject
+                                    .getString("DATA"));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                String category_id = object
+                                        .getString("category_id");
+                                String category_name = object
+                                        .getString("category_name");
+                                String category_status = object
+                                        .getString("category_status");
+                                String create_time = object.getString("create_time");
+                                HashMap<String, String> map = new HashMap<String, String>();
+                                map.put("category_id", category_id);
+                                map.put("classname", category_name);
+                                map.put("category_status", category_status);
+                                map.put("create_time", create_time);
+                                classList.add(map);
+                            }
+                            dishesSelectClassAdapter.notifyDataSetChanged();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //添加菜品
+    public void addFood() throws FileNotFoundException {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.ADDGOODS;
+        RequestParams params = new RequestParams();
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        params.put("category_id", foodClassId);
+        params.put("goods_name", et_dis_name.getText().toString());
+        params.put("pre_price", et_dis_price.getText().toString());
+        params.put("discount", et_dis_discontent.getText().toString());
+        params.put("introduction", et_dis_prief.getText().toString());
+        if (!imageUrl.equals("")) {
+            File file = new File(imageUrl);
+            params.put("file", file);
+        }
+        client.get(url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }
