@@ -25,7 +25,7 @@ public class DishesSelectClassAdapter extends BaseQuickAdapter<HashMap<String, S
 
     @Override
     protected void convert(BaseViewHolder helper, HashMap<String, String> item) {
-        helper.setText(R.id.tv_content,"分类");
+        helper.setText(R.id.tv_content,item.get("classname"));
 
     }
 }

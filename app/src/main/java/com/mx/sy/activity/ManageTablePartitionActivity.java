@@ -160,7 +160,7 @@ public class ManageTablePartitionActivity extends BaseActivity {
                             textjianshao.setText(mapList.get(position).get("area_name"));
                             AlertDialog.Builder ad1 = new AlertDialog.Builder(
                                     ManageTablePartitionActivity.this);
-                            ad1.setTitle("增加分区");
+                            ad1.setTitle("修改分区");
                             ad1.setIcon(R.drawable.ic_launcher);
                             ad1.setView(textEntryView);
                             ad1.setPositiveButton(

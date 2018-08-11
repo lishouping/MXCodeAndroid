@@ -103,6 +103,20 @@ public class ApiConfig {
 	public static String DELAREA = "/tableservice/deleteArea";
 	// 修改分区
 	public static String UNDATEAREA = "/tableservice/updateArea";
-
-
+	// 添加菜品分类
+	public static String ADDGOODSCATEGORY = "/goods/addCategory";
+	// 删除分类
+	public static String DELGOODSCATEGORY = "/goods/deleteCategory";
+	// 修改分类
+	public static String UPDATEGOODSCATEGORY = "/goods/updateCategory";
+	// 删除桌台信息
+	public static String DELTABLE = "/tableservice/deleteTable";
+	// 新增桌台
+	public static String ADDTABLE = "/tableservice/addTable";
+	// 修改桌台
+	public static String UPDATETABLE = "/tableservice/updateTable";
+	// 查询单个桌台
+	public static String GETONETABLE = "/tableservice/getOneTable/";
+	// 查询单个桌台
+	public static String GETONEAREA = "/tableservice/getOneArea/";
 }
