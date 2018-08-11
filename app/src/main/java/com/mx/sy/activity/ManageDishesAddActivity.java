@@ -427,7 +427,7 @@ public class ManageDishesAddActivity extends BaseActivity {
             File file = new File(imageUrl);
             params.put("file", file);
         }
-        client.get(url, new AsyncHttpResponseHandler() {
+        client.get(url, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
