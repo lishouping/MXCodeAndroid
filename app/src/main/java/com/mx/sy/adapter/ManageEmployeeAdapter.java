@@ -18,16 +18,24 @@ import java.util.List;
  * @date 2018/8/8 11:20
  * @see
  */
-public class ManageEmployeeAdapter extends BaseQuickAdapter<HashMap<String,String>,BaseViewHolder>{
+public class ManageEmployeeAdapter extends BaseQuickAdapter<HashMap<String, String>, BaseViewHolder> {
     public ManageEmployeeAdapter(int layoutResId, @Nullable List<HashMap<String, String>> data) {
         super(layoutResId, data);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, HashMap<String, String> item) {
-        helper.setText(R.id.tv_user_name,"李某某（xiaoli）");
-        helper.setText(R.id.tv_phone,"电话:15566059988");
-        helper.setText(R.id.tv_state,"状态:正常");
-        helper.setText(R.id.tv_type,"类型:服务员");
+        helper.setText(R.id.tv_user_name, item.get("name") + "(" + item.get("username") + ")");
+        helper.setText(R.id.tv_phone, "电话:" + item.get("phonenum"));
+        if (item.get("user_status").equals("1")) {
+            helper.setText(R.id.tv_state, "状态:" + "正常");
+        } else {
+            helper.setText(R.id.tv_state, "状态:" + "冻结");
+        }
+        if (item.get("type").equals("1")) {
+            helper.setText(R.id.tv_type, "类型:店长");
+        } else {
+            helper.setText(R.id.tv_type, "类型:服务员");
+        }
     }
 }

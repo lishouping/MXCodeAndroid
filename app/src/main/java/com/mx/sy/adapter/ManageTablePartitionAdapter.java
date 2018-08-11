@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mx.sy.R;
+import com.mx.sy.utils.CommonUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ManageTablePartitionAdapter extends BaseQuickAdapter<HashMap<String
     @Override
     protected void convert(BaseViewHolder helper, HashMap<String, String> item) {
         helper.setText(R.id.tv_item_num, helper.getLayoutPosition() + 1 + "");
-        helper.setText(R.id.tv_partition_name, "分区名称:一楼");
-        helper.setText(R.id.tv_crate_time, "创建时间:2018-11-22");
+        helper.setText(R.id.tv_partition_name, "分区名称:" + item.get("area_name"));
+        helper.setText(R.id.tv_crate_time, "创建时间:" + CommonUtils.getStrTime(item.get("create_time")));
     }
 }

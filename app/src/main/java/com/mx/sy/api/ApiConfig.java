@@ -97,7 +97,12 @@ public class ApiConfig {
 	public static String CHANGEWAITER = "/waiter/changWaiterStatus";
 	// 删除ID服务员
 	public static String DELWAITER = "/waiter/deleteWaiter";
-
+	// 增加分区
+	public static String INSERTAREA = "/tableservice/addArea";
+	// 删除分区
+	public static String DELAREA = "/tableservice/deleteArea";
+	// 修改分区
+	public static String UNDATEAREA = "/tableservice/updateArea";
 
 
 }
