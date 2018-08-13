@@ -147,7 +147,7 @@ public class ManageDishesActivity extends BaseActivity {
         manageDishesAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
-                final String[] items = {"售罄", "修改", "删除"};
+                final String[] items = {"详情", "修改", "删除"};
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageDishesActivity.this);
                 alertBuilder.setTitle("请选择操作");
                 alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
@@ -155,7 +155,11 @@ public class ManageDishesActivity extends BaseActivity {
                     public void onClick(DialogInterface arg0, int index) {
                         alertDialog.dismiss();
                         if (index == 0) {
-
+                            Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
+                            intent.putExtra("pagetype", "1");
+                            intent.putExtra("goods_id", mapList.get(position).get("good_id"));
+                            intent.putExtra("category_name", mapList.get(position).get("category_name"));
+                            startActivity(intent);
                         } else if (index == 1) {
                             Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
                             intent.putExtra("pagetype", "2");
@@ -169,16 +173,6 @@ public class ManageDishesActivity extends BaseActivity {
                 });
                 alertDialog = alertBuilder.create();
                 alertDialog.show();
-            }
-        });
-        manageDishesAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
-                intent.putExtra("pagetype", "1");
-                intent.putExtra("goods_id", mapList.get(position).get("good_id"));
-                intent.putExtra("category_name", mapList.get(position).get("category_name"));
-                startActivity(intent);
             }
         });
     }
