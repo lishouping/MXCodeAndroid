@@ -36,213 +36,242 @@ import com.mx.sy.zxing.view.ViewfinderView;
 
 /**
  * Initial the camera
- * 
+ *
  * @author Ryan.Tang
  */
 public class MipcaActivityCapture extends Activity implements Callback {
 
-	private CaptureActivityHandler handler;
-	private ViewfinderView viewfinderView;
-	private boolean hasSurface;
-	private Vector<BarcodeFormat> decodeFormats;
-	private String characterSet;
-	private InactivityTimer inactivityTimer;
-	private MediaPlayer mediaPlayer;
-	private boolean playBeep;
-	private static final float BEEP_VOLUME = 0.10f;
-	private boolean vibrate;
-	private TextView tv_title;
+    private CaptureActivityHandler handler;
+    private ViewfinderView viewfinderView;
+    private boolean hasSurface;
+    private Vector<BarcodeFormat> decodeFormats;
+    private String characterSet;
+    private InactivityTimer inactivityTimer;
+    private MediaPlayer mediaPlayer;
+    private boolean playBeep;
+    private static final float BEEP_VOLUME = 0.10f;
+    private boolean vibrate;
+    private TextView tv_title;
+    /**
+     * pageType 0 表示扫码点餐
+     * pageType 1 表示微信支付扫码付款
+     * pageType 2 表示支付宝支付扫码付款
+     */
+    private String pageType;
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_capture);
-		// ViewUtil.addTopView(getApplicationContext(), this,
-		// R.string.scan_card);
-		CameraManager.init(getApplication());
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_capture);
+        // ViewUtil.addTopView(getApplicationContext(), this,
+        // R.string.scan_card);
+        CameraManager.init(getApplication());
 
-		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 
-		tv_title = (TextView) findViewById(R.id.tv_title);
-		tv_title.setText("扫码点餐");
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        tv_title.setText("扫码点餐");
 
-		LinearLayout mButtonBack = (LinearLayout) findViewById(R.id.ll_back);
-		mButtonBack.setOnClickListener(new OnClickListener() {
+        LinearLayout mButtonBack = (LinearLayout) findViewById(R.id.ll_back);
+        mButtonBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				MipcaActivityCapture.this.finish();
+            @Override
+            public void onClick(View v) {
+                MipcaActivityCapture.this.finish();
 
-			}
-		});
-		hasSurface = false;
-		inactivityTimer = new InactivityTimer(this);
-	}
+            }
+        });
+        hasSurface = false;
+        inactivityTimer = new InactivityTimer(this);
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
-		SurfaceHolder surfaceHolder = surfaceView.getHolder();
-		if (hasSurface) {
-			initCamera(surfaceHolder);
-		} else {
-			surfaceHolder.addCallback(this);
-			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		}
-		decodeFormats = null;
-		characterSet = null;
+        pageType = getIntent().getStringExtra("pageType");
 
-		playBeep = true;
-		AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
-		if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-			playBeep = false;
-		}
-		initBeepSound();
-		vibrate = true;
-		
-	}
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (handler != null) {
-			handler.quitSynchronously();
-			handler = null;
-		}
-		CameraManager.get().closeDriver();
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        if (hasSurface) {
+            initCamera(surfaceHolder);
+        } else {
+            surfaceHolder.addCallback(this);
+            surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        }
+        decodeFormats = null;
+        characterSet = null;
 
-	@Override
-	protected void onDestroy() {
-		inactivityTimer.shutdown();
-		super.onDestroy();
-	}
+        playBeep = true;
+        AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
+        if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+            playBeep = false;
+        }
+        initBeepSound();
+        vibrate = true;
 
-	public void handleDecode(Result result, Bitmap barcode) {
-		inactivityTimer.onActivity();
-		playBeepSoundAndVibrate();
-		String resultString = result.getText()+"";
-		// 取到结果处理
-		String[] args = resultString.split("&");
+    }
 
-		String table_id = args[1];
-		String[] taidargs = table_id.split("=");
-		String tableid = taidargs[1];
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (handler != null) {
+            handler.quitSynchronously();
+            handler = null;
+        }
+        CameraManager.get().closeDriver();
+    }
 
-		String table_name = args[2];
-		String[] tabnam = table_name.split("=");
-		String tablename = tabnam[1];
+    @Override
+    protected void onDestroy() {
+        inactivityTimer.shutdown();
+        super.onDestroy();
+    }
 
-		Intent intent = new Intent();
-		intent.setClass(MipcaActivityCapture.this, FoodCustomActivity.class);
-		intent.putExtra("table_id", tableid);
-		intent.putExtra("table_name", tablename);
-		startActivity(intent);
-		finish();
+    public void handleDecode(Result result, Bitmap barcode) {
+        inactivityTimer.onActivity();
+        playBeepSoundAndVibrate();
+        String resultString = result.getText() + "";
 
-	}
-	private void initCamera(SurfaceHolder surfaceHolder) {
-		try {
-			CameraManager.get().openDriver(surfaceHolder);
-		} catch (IOException ioe) {
-			return;
-		} catch (RuntimeException e) {
-			return;
-		}
-		if (handler == null) {
-			handler = new CaptureActivityHandler(this, decodeFormats,
-					characterSet);
-		}
-	}
+        if (pageType.equals("0")) {
+            if (resultString.contains("&")) {
+                String[] args = resultString.split("&");
 
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
+                String table_id = args[1];
+                String[] taidargs = table_id.split("=");
+                String tableid = taidargs[1];
 
-	}
+                String table_name = args[2];
+                String[] tabnam = table_name.split("=");
+                String tablename = tabnam[1];
 
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		if (!hasSurface) {
-			hasSurface = true;
-			initCamera(holder);
-		}
+                Intent intent = new Intent();
+                intent.setClass(MipcaActivityCapture.this, FoodCustomActivity.class);
+                intent.putExtra("table_id", tableid);
+                intent.putExtra("table_name", tablename);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "扫描的二维码无效", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        handler.restartPreviewAndDecode();
+                    }
+                }, 3000);
 
-	}
+            }
+        } else if (pageType.equals("1")) {
 
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		hasSurface = false;
+        } else if (pageType.equals("2")) {
 
-	}
+        }
+    }
 
-	public ViewfinderView getViewfinderView() {
-		return viewfinderView;
-	}
+    private void initCamera(SurfaceHolder surfaceHolder) {
+        try {
+            CameraManager.get().openDriver(surfaceHolder);
+        } catch (IOException ioe) {
+            return;
+        } catch (RuntimeException e) {
+            return;
+        }
+        if (handler == null) {
+            handler = new CaptureActivityHandler(this, decodeFormats,
+                    characterSet);
+        }
+    }
 
-	public Handler getHandler() {
-		return handler;
-	}
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                               int height) {
 
-	public void drawViewfinder() {
-		viewfinderView.drawViewfinder();
+    }
 
-	}
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        if (!hasSurface) {
+            hasSurface = true;
+            initCamera(holder);
+        }
 
-	private void initBeepSound() {
-		if (playBeep && mediaPlayer == null) {
-			// The volume on STREAM_SYSTEM is not adjustable, and users found it
-			// too loud,
-			// so we now play on the music stream.
-			setVolumeControlStream(AudioManager.STREAM_MUSIC);
-			mediaPlayer = new MediaPlayer();
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mediaPlayer.setOnCompletionListener(beepListener);
+    }
 
-			AssetFileDescriptor file = getResources().openRawResourceFd(
-					R.raw.beep);
-			try {
-				mediaPlayer.setDataSource(file.getFileDescriptor(),
-						file.getStartOffset(), file.getLength());
-				file.close();
-				mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
-				mediaPlayer.prepare();
-			} catch (IOException e) {
-				mediaPlayer = null;
-			}
-		}
-	}
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        hasSurface = false;
 
-	private static final long VIBRATE_DURATION = 200L;
+    }
 
-	private void playBeepSoundAndVibrate() {
-		if (playBeep && mediaPlayer != null) {
-			mediaPlayer.start();
-		}
-		if (vibrate) {
-			Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-			vibrator.vibrate(VIBRATE_DURATION);
-		}
-	}
+    public ViewfinderView getViewfinderView() {
+        return viewfinderView;
+    }
 
-	/**
-	 * When the beep has finished playing, rewind to queue up another one.
-	 */
-	private final OnCompletionListener beepListener = new OnCompletionListener() {
-		public void onCompletion(MediaPlayer mediaPlayer) {
-			mediaPlayer.seekTo(0);
-		}
-	};
+    public Handler getHandler() {
+        return handler;
+    }
 
-	// 监听手机返回键
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-		}
-		return super.onKeyDown(keyCode, event);
-	}
+    public void drawViewfinder() {
+        viewfinderView.drawViewfinder();
+
+    }
+
+    private void initBeepSound() {
+        if (playBeep && mediaPlayer == null) {
+            // The volume on STREAM_SYSTEM is not adjustable, and users found it
+            // too loud,
+            // so we now play on the music stream.
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setOnCompletionListener(beepListener);
+
+            AssetFileDescriptor file = getResources().openRawResourceFd(
+                    R.raw.beep);
+            try {
+                mediaPlayer.setDataSource(file.getFileDescriptor(),
+                        file.getStartOffset(), file.getLength());
+                file.close();
+                mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                mediaPlayer = null;
+            }
+        }
+    }
+
+    private static final long VIBRATE_DURATION = 200L;
+
+    private void playBeepSoundAndVibrate() {
+        if (playBeep && mediaPlayer != null) {
+            mediaPlayer.start();
+        }
+        if (vibrate) {
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            vibrator.vibrate(VIBRATE_DURATION);
+        }
+    }
+
+    /**
+     * When the beep has finished playing, rewind to queue up another one.
+     */
+    private final OnCompletionListener beepListener = new OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            mediaPlayer.seekTo(0);
+        }
+    };
+
+    // 监听手机返回键
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }
