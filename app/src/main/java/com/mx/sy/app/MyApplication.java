@@ -8,6 +8,8 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.mx.sy.utils.ImageLoader;
 import com.mx.sy.utils.ImageLoader.Type;
 import com.mx.sy.utils.PicassoImageLoader;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 
 import android.app.Application;
 import android.content.Context;
@@ -30,6 +32,7 @@ public class MyApplication extends Application {
 		imagePicker.setImageLoader(new PicassoImageLoader());   //设置图片加载器
 		imagePicker.setMultiMode(false); //单选false 多选true
 		imagePicker.setCrop(false);        //允许裁剪（单选才有效）
+		Logger.addLogAdapter(new AndroidLogAdapter());
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.mx.sy.R;
 import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseActivity;
+import com.mx.sy.push.Logger;
 import com.mx.sy.push.TagAliasOperatorHelper;
 import com.mx.sy.service.PendingRemindedService;
 import com.tbruyelle.rxpermissions2.Permission;
@@ -159,6 +160,7 @@ public class LoginActivity extends BaseActivity {
 				if (arg0 == 200) {
 					try {
 						String response = new String(arg2, "UTF-8");
+						com.orhanobut.logger.Logger.d(response);
 						JSONObject jsonObject = new JSONObject(response);
 						String CODE = jsonObject.getString("CODE");
 						if (CODE.equals("1000")) {
@@ -224,7 +226,6 @@ public class LoginActivity extends BaseActivity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 						btn_login.setClickable(true);
-						Log.i("异常了", e + "");
 						Toast.makeText(getApplicationContext(), "服务器异常",
 								Toast.LENGTH_SHORT).show();
 						dissmissDilog();

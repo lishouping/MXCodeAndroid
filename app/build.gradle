@@ -44,4 +44,5 @@ dependencies {
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+    implementation 'com.orhanobut:logger:2.2.0'
 }

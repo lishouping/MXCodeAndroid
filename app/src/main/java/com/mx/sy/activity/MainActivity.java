@@ -269,6 +269,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
                 if (arg0 == 200) {
                     try {
                         String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
                         JSONObject jsonObject = new JSONObject(response);
                         String CODE = jsonObject.getString("CODE");
                         if (CODE.equals("1000")) {
