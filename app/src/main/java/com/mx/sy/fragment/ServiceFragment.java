@@ -1,13 +1,5 @@
 package com.mx.sy.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -25,18 +17,21 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
-import com.mx.sy.activity.ManageEmployeeActivity;
 import com.mx.sy.activity.ServiceDetailedActivity;
 import com.mx.sy.adapter.ServiceAdapter;
-import com.mx.sy.adapter.TablesAdapter;
 import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseFragment;
-import com.mx.sy.common.PullToRefreshView;
-import com.mx.sy.common.PullToRefreshView.OnFooterRefreshListener;
-import com.mx.sy.common.PullToRefreshView.OnHeaderRefreshListener;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ServiceFragment extends BaseFragment implements OnClickListener {
     private LinearLayout lin_nomanage, lin_processed;

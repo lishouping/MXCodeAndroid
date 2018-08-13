@@ -1,14 +1,5 @@
 package com.mx.sy.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -26,19 +17,21 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
-import com.mx.sy.activity.OrderConductActivity;
-import com.mx.sy.activity.OrderEndActivity;
 import com.mx.sy.activity.OrderDetailedActivity;
 import com.mx.sy.adapter.OrderAdapter;
 import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseFragment;
-import com.mx.sy.common.PullToRefreshView;
-import com.mx.sy.common.PullToRefreshView.OnFooterRefreshListener;
-import com.mx.sy.common.PullToRefreshView.OnHeaderRefreshListener;
-import com.mx.sy.utils.SendMessage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>Title: OrderFragment<／p>

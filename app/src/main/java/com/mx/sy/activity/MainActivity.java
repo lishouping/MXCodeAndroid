@@ -28,7 +28,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
 import com.mx.sy.api.ApiConfig;
-import com.mx.sy.common.PullToRefreshView;
 import com.mx.sy.fragment.MineFragment;
 import com.mx.sy.fragment.OrderFragment;
 import com.mx.sy.fragment.ServiceFragment;
@@ -75,7 +74,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         switch (v.getId()) {
             case R.id.fl_tableinfo:
                 setChioceItem(1);
-                PullToRefreshView.ishidfootview = 1;
                 break;
             case R.id.fl_service:
                 setChioceItem(2);
@@ -86,7 +84,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.fl_order:
-                PullToRefreshView.ishidfootview = 0;
                 setChioceItem(3);
                 break;
             case R.id.fl_mine:
