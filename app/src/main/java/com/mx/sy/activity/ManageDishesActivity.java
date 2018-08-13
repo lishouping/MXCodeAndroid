@@ -198,6 +198,7 @@ public class ManageDishesActivity extends BaseActivity {
 
     @Override
     public void doBusiness(Context mContext) {
+        selectCategory();
     }
 
     @Override
@@ -206,7 +207,7 @@ public class ManageDishesActivity extends BaseActivity {
             mapList.clear();
             manageDishesAdapter.notifyDataSetChanged();
         }
-        selectCategory();
+        selectFood();
         super.onResume();
     }
 
@@ -286,10 +287,6 @@ public class ManageDishesActivity extends BaseActivity {
                                 map.put("goods_list", array + "");
                                 classList.add(map);
                             }
-                            selectFood();
-//                            setTableGoodsInfo(
-//                                    disclassList.get(0).get("category_name")
-//                                            + "", 0);
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
