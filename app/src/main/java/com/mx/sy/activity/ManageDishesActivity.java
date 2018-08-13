@@ -87,6 +87,7 @@ public class ManageDishesActivity extends BaseActivity {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         alertDialog.dismiss();
+                        setTableGoodsInfo(classList.get(position).get("classname"), 1);
                     }
                 });
 
@@ -155,13 +156,13 @@ public class ManageDishesActivity extends BaseActivity {
                         alertDialog.dismiss();
                         if (index == 0) {
 
-                        }else if (index==1){
+                        } else if (index == 1) {
                             Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
                             intent.putExtra("pagetype", "2");
-                            intent.putExtra("goods_id",mapList.get(position).get("good_id"));
-                            intent.putExtra("category_name",mapList.get(position).get("category_name"));
+                            intent.putExtra("goods_id", mapList.get(position).get("good_id"));
+                            intent.putExtra("category_name", mapList.get(position).get("category_name"));
                             startActivity(intent);
-                        }else if (index==2){
+                        } else if (index == 2) {
                             delFood(mapList.get(position).get("good_id"));
                         }
                     }
@@ -175,8 +176,8 @@ public class ManageDishesActivity extends BaseActivity {
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
                 intent.putExtra("pagetype", "1");
-                intent.putExtra("goods_id",mapList.get(position).get("good_id"));
-                intent.putExtra("category_name",mapList.get(position).get("category_name"));
+                intent.putExtra("goods_id", mapList.get(position).get("good_id"));
+                intent.putExtra("category_name", mapList.get(position).get("category_name"));
                 startActivity(intent);
             }
         });
@@ -197,7 +198,6 @@ public class ManageDishesActivity extends BaseActivity {
 
     @Override
     public void doBusiness(Context mContext) {
-        selectCategory();
     }
 
     @Override
@@ -206,7 +206,7 @@ public class ManageDishesActivity extends BaseActivity {
             mapList.clear();
             manageDishesAdapter.notifyDataSetChanged();
         }
-        selectFood();
+        selectCategory();
         super.onResume();
     }
 
@@ -277,20 +277,23 @@ public class ManageDishesActivity extends BaseActivity {
                                         .getString("category_name");
                                 String category_status = object
                                         .getString("category_status");
-                                String create_time = object.getString("create_time");
+                                JSONArray array = new JSONArray(object
+                                        .getString("goods_list"));
                                 HashMap<String, String> map = new HashMap<String, String>();
                                 map.put("category_id", category_id);
                                 map.put("classname", category_name);
                                 map.put("category_status", category_status);
-                                map.put("create_time", create_time);
+                                map.put("goods_list", array + "");
                                 classList.add(map);
                             }
-                            dishesSelectClassAdapter.notifyDataSetChanged();
+                            selectFood();
+//                            setTableGoodsInfo(
+//                                    disclassList.get(0).get("category_name")
+//                                            + "", 0);
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
-                        dissmissDilog();
                     }
                 }
             }
@@ -381,6 +384,38 @@ public class ManageDishesActivity extends BaseActivity {
         });
     }
 
+    // 查询菜品
+    private void setTableGoodsInfo(String className, int slepos) {
+        mapList.clear();
+        for (int i = 0; i < classList.size(); i++) {
+            try {
+                String category_name = classList.get(i)
+                        .get("classname");
+                JSONArray array = new JSONArray(classList.get(i).get(
+                        "goods_list"));
+                if (category_name.equals(className)) {
+                    for (int j = 0; j < array.length(); j++) {
+                        JSONObject object2 = array.getJSONObject(j);
+                        String goods_name = object2.getString("goods_name");// 菜品名
+                        String pre_price = object2.getString("pre_price");// 单价
+                        String good_id = object2.getString("good_id");// 商品id
+                        if (category_name.equals(className)) {
+                            HashMap<String, String> map4 = new HashMap<String, String>();
+                            map4.put("goods_name", goods_name);
+                            map4.put("pre_price", pre_price);
+                            map4.put("good_id", good_id);
+                            map4.put("category_name", category_name);
+                            mapList.add(map4);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        manageDishesAdapter.notifyDataSetChanged();
+    }
+
     //删除菜品
     public void delFood(String good_id) {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -404,7 +439,7 @@ public class ManageDishesActivity extends BaseActivity {
                                     Toast.LENGTH_SHORT).show();
                             mapList.clear();
                             manageDishesAdapter.notifyDataSetChanged();
-                            selectFood();
+                            //selectFood();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
