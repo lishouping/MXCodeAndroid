@@ -43,16 +43,16 @@ public class PrintAddActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_sumbit:
-                if (et_print_name.getText().equals("")) {
+                if (et_print_name.getText().toString().equals("")) {
                     Toast.makeText(PrintAddActivity.this, "打印机名称", Toast
                             .LENGTH_SHORT).show();
-                } else if (et_print_number.getText().equals("")) {
+                } else if (et_print_number.getText().toString().equals("")) {
                     Toast.makeText(PrintAddActivity.this, "请输入打印机编号", Toast
                             .LENGTH_SHORT).show();
-                } else if (et_print_key.getText().equals("")) {
+                } else if (et_print_key.getText().toString().equals("")) {
                     Toast.makeText(PrintAddActivity.this, "请输入打印机KEY", Toast
                             .LENGTH_SHORT).show();
-                } else if (et_print_num.getText().equals("")) {
+                } else if (et_print_num.getText().toString().equals("")) {
                     Toast.makeText(PrintAddActivity.this, "请输入份数", Toast
                             .LENGTH_SHORT).show();
                 } else if (printType.equals("")) {
