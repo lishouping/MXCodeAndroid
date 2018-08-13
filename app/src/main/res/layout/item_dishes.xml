@@ -43,9 +43,10 @@
 
                 <TextView
                     android:id="@+id/tv_class_name"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_weight="1"
                     android:text="菜品名"
                     android:textColor="#000"
                     android:textSize="12sp" />
@@ -53,35 +54,32 @@
 
                 <TextView
                     android:id="@+id/tv_crate_time"
-                    android:layout_width="60dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_weight="0.8"
                     android:text="分类"
                     android:textColor="#000"
                     android:textSize="12sp" />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+
                 <TextView
                     android:id="@+id/tv_class_state"
-                    android:layout_width="60dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:layout_weight="0.6"
                     android:text="价格"
                     android:textColor="@color/price_color"
                     android:textSize="12sp" />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+
                 <LinearLayout
                     android:id="@+id/ll_detail"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"
