@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mx.sy.zxingdcoding;
+package com.mx.sy.zxing.decoding;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -32,14 +32,17 @@ public final class FinishListener
     this.activityToFinish = activityToFinish;
   }
 
+  @Override
   public void onCancel(DialogInterface dialogInterface) {
     run();
   }
 
+  @Override
   public void onClick(DialogInterface dialogInterface, int i) {
     run();
   }
 
+  @Override
   public void run() {
     activityToFinish.finish();
   }

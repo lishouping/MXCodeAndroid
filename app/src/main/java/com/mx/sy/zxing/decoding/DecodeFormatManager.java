@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.mx.sy.zxingdcoding;
+package com.mx.sy.zxing.decoding;
+
+import android.content.Intent;
+import android.net.Uri;
+
+import com.google.zxing.BarcodeFormat;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
-
-import android.content.Intent;
-import android.net.Uri;
-import com.google.zxing.BarcodeFormat;
 
 final class DecodeFormatManager {
 

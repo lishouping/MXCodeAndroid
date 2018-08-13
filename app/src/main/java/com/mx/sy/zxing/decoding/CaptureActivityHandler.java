@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.mx.sy.zxingdcoding;
-
-import java.util.Vector;
+package com.mx.sy.zxing.decoding;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,8 +29,10 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.mx.sy.R;
 import com.mx.sy.activity.MipcaActivityCapture;
+import com.mx.sy.zxing.camera.CameraManager;
 import com.mx.sy.zxing.view.ViewfinderResultPointCallback;
-import com.mx.syj.zxing.camera.CameraManager;
+
+import java.util.Vector;
 
 /**
  * This class handles all the messaging which comprises the state machine for capture.
@@ -82,7 +82,7 @@ public final class CaptureActivityHandler extends Handler {
         Log.d(TAG, "Got decode succeeded message");
         state = State.SUCCESS;
         Bundle bundle = message.getData();
-        
+
         /***********************************************************************/
         Bitmap barcode = bundle == null ? null :
             (Bitmap) bundle.getParcelable(DecodeThread.BARCODE_BITMAP);//���ñ����߳�

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package com.mx.sy.zxingdcoding;
-import java.util.Hashtable;
+package com.mx.sy.zxing.decoding;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,8 +30,10 @@ import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.mx.sy.R;
 import com.mx.sy.activity.MipcaActivityCapture;
-import com.mx.syj.zxing.camera.CameraManager;
-import com.mx.syj.zxing.camera.PlanarYUVLuminanceSource;
+import com.mx.sy.zxing.camera.CameraManager;
+import com.mx.sy.zxing.camera.PlanarYUVLuminanceSource;
+
+import java.util.Hashtable;
 
 final class DecodeHandler extends Handler {
 
@@ -75,8 +76,9 @@ final class DecodeHandler extends Handler {
     //modify here
     byte[] rotatedData = new byte[data.length];
     for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++)
-            rotatedData[x * height + height - y - 1] = data[x + y * width];
+        for (int x = 0; x < width; x++) {
+          rotatedData[x * height + height - y - 1] = data[x + y * width];
+        }
     }
     int tmp = width; // Here we are swapping, that's the difference to #11
     width = height;

@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-package com.mx.sy.zxingdcoding;
-
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.concurrent.CountDownLatch;
+package com.mx.sy.zxing.decoding;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -27,6 +23,10 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
 import com.mx.sy.activity.MipcaActivityCapture;
+
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 
 final class DecodeThread extends Thread {
 

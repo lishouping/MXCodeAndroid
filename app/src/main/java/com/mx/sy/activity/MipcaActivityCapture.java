@@ -29,10 +29,10 @@ import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.mx.sy.R;
+import com.mx.sy.zxing.camera.CameraManager;
+import com.mx.sy.zxing.decoding.CaptureActivityHandler;
+import com.mx.sy.zxing.decoding.InactivityTimer;
 import com.mx.sy.zxing.view.ViewfinderView;
-import com.mx.sy.zxingdcoding.CaptureActivityHandler;
-import com.mx.sy.zxingdcoding.InactivityTimer;
-import com.mx.syj.zxing.camera.CameraManager;
 
 /**
  * Initial the camera

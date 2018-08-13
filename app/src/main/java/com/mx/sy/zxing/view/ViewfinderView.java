@@ -34,7 +34,7 @@ import android.view.View;
 
 import com.google.zxing.ResultPoint;
 import com.mx.sy.R;
-import com.mx.syj.zxing.camera.CameraManager;
+import com.mx.sy.zxing.camera.CameraManager;
 
 /**
  * This view is overlaid on top of the camera preview. It adds the viewfinder
