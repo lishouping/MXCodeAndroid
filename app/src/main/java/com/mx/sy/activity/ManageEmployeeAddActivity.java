@@ -50,13 +50,13 @@ public class ManageEmployeeAddActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_sumbit:
-                if (et_person_name.getText().equals("")) {
+                if (et_person_name.getText().toString().equals("")) {
                     Toast.makeText(ManageEmployeeAddActivity.this, "请输入员工姓名", Toast
                             .LENGTH_SHORT).show();
-                } else if (et_person_number.getText().equals("")) {
+                } else if (et_person_number.getText().toString().equals("")) {
                     Toast.makeText(ManageEmployeeAddActivity.this, "请输入登录账号", Toast
                             .LENGTH_SHORT).show();
-                } else if (et_phone.getText().equals("")) {
+                } else if (et_phone.getText().toString().equals("")) {
                     Toast.makeText(ManageEmployeeAddActivity.this, "请输入手机号码", Toast
                             .LENGTH_SHORT).show();
                 } else if (userType.equals("")) {

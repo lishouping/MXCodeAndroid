@@ -90,50 +90,49 @@ public class ManageDishesAddActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_sumbit:
-                new SweetAlertDialog(this,
-                        SweetAlertDialog.NORMAL_TYPE)
-                        .setTitleText("确定要提交信息吗？")
-                        .setCancelText("取消")
-                        .setConfirmText("确定")
-                        .showCancelButton(true)
-                        .setConfirmClickListener(
-                                new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sDialog) {
-                                        if (et_dis_name.getText().toString().equals("")) {
-                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品名", Toast
-                                                    .LENGTH_SHORT).show();
-                                        } else if (foodClassId.equals("")) {
-                                            Toast.makeText(ManageDishesAddActivity.this, "请选择菜品分类", Toast
-                                                    .LENGTH_SHORT).show();
-                                        } else if (et_dis_price.getText().toString().equals("")) {
-                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品信息", Toast
-                                                    .LENGTH_SHORT).show();
-                                        } else if (et_dis_discontent.getText().toString().equals("")) {
-                                            Toast.makeText(ManageDishesAddActivity.this, "请填写菜品折扣", Toast
-                                                    .LENGTH_SHORT).show();
-                                        } else {
+                if (et_dis_name.getText().toString().equals("")) {
+                    Toast.makeText(ManageDishesAddActivity.this, "请填写菜品名", Toast
+                            .LENGTH_SHORT).show();
+                } else if (foodClassId.equals("")) {
+                    Toast.makeText(ManageDishesAddActivity.this, "请选择菜品分类", Toast
+                            .LENGTH_SHORT).show();
+                } else if (et_dis_price.getText().toString().equals("")) {
+                    Toast.makeText(ManageDishesAddActivity.this, "请填写菜品单价", Toast
+                            .LENGTH_SHORT).show();
+                } else if (et_dis_discontent.getText().toString().equals("")) {
+                    Toast.makeText(ManageDishesAddActivity.this, "请填写菜品折扣", Toast
+                            .LENGTH_SHORT).show();
+                } else {
+                    new SweetAlertDialog(this,
+                            SweetAlertDialog.NORMAL_TYPE)
+                            .setTitleText("确定要提交信息吗？")
+                            .setCancelText("取消")
+                            .setConfirmText("确定")
+                            .showCancelButton(true)
+                            .setConfirmClickListener(
+                                    new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
                                             try {
                                                 if (pagetype.equals("2")){
                                                     updateFood();
                                                 }else if (pagetype.equals("0")){
                                                     addFood();
                                                 }
-                                                sDialog.cancel();
                                             } catch (FileNotFoundException e) {
                                                 e.printStackTrace();
                                             }
+                                            sDialog.cancel();
                                         }
-
-                                    }
-                                })
-                        .setCancelClickListener(
-                                new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sDialog) {
-                                        sDialog.cancel();
-                                    }
-                                }).show();
+                                    })
+                            .setCancelClickListener(
+                                    new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.cancel();
+                                        }
+                                    }).show();
+                }
                 break;
             case R.id.select_persontype:
                 final String[] items = {"服务员", "店长"};
