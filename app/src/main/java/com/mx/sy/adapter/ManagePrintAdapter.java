@@ -26,7 +26,7 @@ public class ManagePrintAdapter extends BaseQuickAdapter<HashMap<String, String>
     @Override
     protected void convert(BaseViewHolder helper, HashMap<String, String> item) {
         helper.setText(R.id.tv_print_name, "打印机名称:" + item.get("printer_name"));
-        helper.setText(R.id.tv_print_number, "打印机编号:" + item.get("printer_no"));
+        helper.setText(R.id.tv_print_number, "编号:" + item.get("printer_no"));
 
         if (item.get("type_print").equals("1")) {
             helper.setText(R.id.tv_print_type, "打印类型:" + "后厨");

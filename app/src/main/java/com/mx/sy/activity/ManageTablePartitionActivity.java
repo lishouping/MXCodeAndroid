@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ManageTablePartitionActivity extends BaseActivity {
+public class  ManageTablePartitionActivity extends BaseActivity {
 
     private LinearLayout ll_back;
     private TextView tv_title;

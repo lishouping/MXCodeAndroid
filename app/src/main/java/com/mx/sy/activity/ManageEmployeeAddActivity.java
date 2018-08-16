@@ -167,6 +167,7 @@ public class ManageEmployeeAddActivity extends BaseActivity {
         params.put("shop_id", preferences.getString("shop_id", ""));
         params.put("user_status", "1");
         params.put("type", userType);
+        params.put("phonenum", et_phone.getText().toString());
         client.post(url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
