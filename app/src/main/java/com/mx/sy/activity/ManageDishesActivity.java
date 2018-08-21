@@ -432,7 +432,7 @@ public class ManageDishesActivity extends BaseActivity {
                                     Toast.LENGTH_SHORT).show();
                             mapList.clear();
                             manageDishesAdapter.notifyDataSetChanged();
-                            //selectFood();
+                            selectFood();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
