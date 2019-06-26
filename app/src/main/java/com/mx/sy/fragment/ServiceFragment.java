@@ -112,21 +112,21 @@ public class ServiceFragment extends BaseFragment implements OnClickListener {
         viw_processed = findViewById(R.id.viw_processed);
 
         lv_service = findViewById(R.id.lv_service);
-        lv_service.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-                                    long arg3) {
-                // TODO Auto-generated method stub
-                if (selectBtnFlag == 0) {
-                    Intent intent = new Intent(getActivity(), ServiceDetailedActivity.class);
-                    intent.putExtra("service_id", dateList.get(position).get("service_id"));
-                    intent.putExtra("service_state", dateList.get(position).get("status"));
-                    intent.putExtra("content", "餐桌:" + dateList.get(position).get("table_name") + "    服务:" + dateList.get(position).get("service_content"));
-                    startActivity(intent);
-                }
-            }
-        });
+//        lv_service.setOnItemClickListener(new OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+//                                    long arg3) {
+//                // TODO Auto-generated method stub
+//                if (selectBtnFlag == 0) {
+//                    Intent intent = new Intent(getActivity(), ServiceDetailedActivity.class);
+//                    intent.putExtra("service_id", dateList.get(position).get("service_id"));
+//                    intent.putExtra("service_state", dateList.get(position).get("status"));
+//                    intent.putExtra("content", "餐桌:" + dateList.get(position).get("table_name") + "    服务:" + dateList.get(position).get("service_content"));
+//                    startActivity(intent);
+//                }
+//            }
+//        });
     }
 
     @Override

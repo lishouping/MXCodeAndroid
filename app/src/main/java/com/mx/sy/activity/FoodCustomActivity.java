@@ -225,32 +225,9 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 		shopcarList = new ArrayList<HashMap<String, String>>();
 		shoppingCarAdapter = new ShoppingCarAdapter(FoodCustomActivity.this,
 				shopcarList, R.layout.item_shoppingcar);
+		lv_shcar.setAdapter(shoppingCarAdapter);
 
-		task = new TimerTask() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Message message = new Message();
-				message.what = 1;
-				handler.sendMessage(message);
-			}
-		};
-		timer.schedule(task, 2000, 3000);
-//		if (isrefreshcar == true) {
-//			timer.schedule(task, 2000, 3000);
-//		}
-			
 	}
-
-	Handler handler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			// 要做的事情
-			getCart();
-			super.handleMessage(msg);
-		}
-	};
 
 	@Override
 	public void setListener() {
@@ -435,7 +412,6 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 	// 查询购物车/cart/getCart
 	public void getCart() {
 		shopcarList.clear();
-		shoppingCarAdapter.notifyDataSetChanged();
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.addHeader("key", preferences.getString("loginkey", ""));
 		client.addHeader("id", preferences.getString("userid", ""));
@@ -485,7 +461,7 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 								map.put("ext_size_id", object2.getString("ext_size_id"));
 								shopcarList.add(map);
 							}
-							lv_shcar.setAdapter(shoppingCarAdapter);
+							shoppingCarAdapter.notifyDataSetChanged();
 						} else {
 							Toast.makeText(getApplicationContext(),
 									jsonObject.getString("MESSAGE"),

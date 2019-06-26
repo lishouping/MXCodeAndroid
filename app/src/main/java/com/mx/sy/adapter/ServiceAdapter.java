@@ -56,7 +56,7 @@ public class ServiceAdapter extends CommonBaseAdapter<HashMap<String, String>> {
 			holder.setText(R.id.tv_service_time,
 					"创建时间:" + CommonUtils.getStrTime(bean.get("create_time")));
 			holder.setText(R.id.tv_service_name,
-					"服务内容:" + bean.get("service_content"));
+					"" + bean.get("service_content"));
 			String status = bean.get("status");
 			if (status.equals("0")) {
 				holder.setText(R.id.tv_service_state, "状态:未处理");
@@ -104,7 +104,7 @@ public class ServiceAdapter extends CommonBaseAdapter<HashMap<String, String>> {
 			holder.setText(R.id.tv_proservice_time,
 					"服务时间:" + CommonUtils.getStrTime(bean.get("receive_time")));
 			holder.setText(R.id.tv_service_name,
-					"服务内容:" + bean.get("service_content"));
+					"" + bean.get("service_content"));
 			holder.setText(R.id.tv_service_us, "服务人:" + bean.get("name"));
 			String status = bean.get("status");
 			if (status.equals("0")) {
