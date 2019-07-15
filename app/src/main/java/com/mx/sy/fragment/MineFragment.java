@@ -103,7 +103,7 @@ public class MineFragment extends BaseFragment {
                                     public void onClick(
                                             SweetAlertDialog sDialog) {
 
-                                        preferences.edit().putString("username", "").commit();
+                                        //preferences.edit().putString("username", "").commit();
                                         preferences.edit().putString("password", "").commit();
 
                                         sDialog.cancel();

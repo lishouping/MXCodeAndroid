@@ -42,7 +42,8 @@
 	            android:layout_height="wrap_content"
 	            android:layout_margin="5dp"
 	            android:textSize="13sp"
-	            android:text="“嘿！伙计”坚持用高效创造服务，让服务缔造品质。高效率、高服务、高品质，助你打造星级品牌。"/>
+	            android:text="“聚巷客栈管理平台”和“嘿伙计”APP致力于提高餐饮行业的服务质量和工作效率，方便商家管理，易于操作，在经营管理过程中为商家提供经营数据并做出统计，也为了提升消费者的用户体验，把消费者和商家紧密的联系起来。我们秉承助商家打造星级品牌的宗旨，力争利用大数据为商家做出相关问题预判，有效帮助商家提高顾客数量和服务质量。
+"/>
 	    </LinearLayout>
 	    
 	</LinearLayout>
@@ -84,7 +85,7 @@
 	            android:layout_margin="5dp"
 	            android:layout_marginLeft="20dp"
 	            android:textSize="13sp"
-	            android:text="024-31128174"/>
+	            android:text="400-060-5665"/>
 	    </LinearLayout>
 	    
 	</LinearLayout>

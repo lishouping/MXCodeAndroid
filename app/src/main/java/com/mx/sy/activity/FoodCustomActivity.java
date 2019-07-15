@@ -120,6 +120,8 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 				intent.putExtra("table_name", table_name);
 				intent.putExtra("objectintent", objectintent + "");
 				startActivity(intent);
+				fram_shopingcar.setVisibility(View.GONE);
+				shopviewstate = false;
 			}
 			break;
 		case R.id.imgshopingcar:

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -321,11 +322,16 @@ public class OrderFragment extends BaseFragment implements OnClickListener {
                                     if (selectBtnFlag == 0) {
 
                                     } else {
-                                        writerobj = new JSONObject(object.getString("waiter"));
-                                        name = writerobj.getString("name");
+                                        if (TextUtils.isEmpty(object.getString("waiter"))||object.getString("waiter").equals("null")){
+                                            name = "";
+                                        }else {
+                                            writerobj = new JSONObject(object.getString("waiter"));
+                                            name = writerobj.getString("name");
+                                        }
+
                                     }
 
-                                    JSONObject cartobj = new JSONObject(object.getString("cart"));
+                                    //JSONObject cartobj = new JSONObject(object.getString("cart"));
 
 
                                     String table_name = tabobj.getString("table_name");
