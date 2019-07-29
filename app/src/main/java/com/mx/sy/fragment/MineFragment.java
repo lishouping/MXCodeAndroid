@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,8 +16,10 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mx.sy.R;
 import com.mx.sy.activity.AboutUsActivity;
@@ -247,6 +251,55 @@ public class MineFragment extends BaseFragment {
                             intent.setClass(getActivity(), ManageDishesActivity.class);
                             startActivity(intent);
                             break;
+                        case 14:
+                            // 会员查询
+                            LayoutInflater factory = LayoutInflater
+                                    .from(getActivity());
+                            final View textEntryView = factory
+                                    .inflate(
+                                            R.layout.jian_food_dialog,
+                                            null);
+                            final EditText textjianshao = textEntryView
+                                    .findViewById(R.id.text_editjiannumbe);
+                            textjianshao.setHint("请输入会员手机号");
+                            AlertDialog.Builder ad1 = new AlertDialog.Builder(
+                                    getActivity());
+                            ad1.setTitle("会员查询");
+                            ad1.setIcon(R.drawable.ic_launcher);
+                            ad1.setView(textEntryView);
+                            ad1.setPositiveButton(
+                                    "查询",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int i) {
+                                            Toast.makeText(getActivity(), "是会员", Toast.LENGTH_SHORT).show();
+//                                                        .show();
+//                                            String number = textjianshao
+//                                                    .getText()
+//                                                    .toString();
+//                                            if (number.equals("")) {
+//                                                Toast.makeText(ManageTablePartitionActivity.this, "请填写分区名", Toast.LENGTH_SHORT)
+//                                                        .show();
+//                                            }else {
+//
+//
+//                                            }
+                                        }
+                                    });
+                            ad1.setNegativeButton(
+                                    "关闭",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int i) {
+
+                                        }
+                                    });
+                            ad1.show();// 显示对话框
+                            break;
                         default:
                             break;
                     }
@@ -382,6 +435,14 @@ public class MineFragment extends BaseFragment {
             userInfoMap14.put("mytypeImg", R.drawable.icon_my7);
             userInfoMap14.put("isnbsp", "0");
             dateList.add(userInfoMap14);
+
+            HashMap<String, Object> userInfoMap15 = new HashMap<String, Object>();
+            userInfoMap15.put("content", "会员查询");
+            userInfoMap15.put("contentImg", R.drawable.icon_tip);
+            userInfoMap15.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap15.put("isnbsp", "0");
+            dateList.add(userInfoMap15);
+
 
             return dateList;
         }
