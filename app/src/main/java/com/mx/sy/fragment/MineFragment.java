@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.mx.sy.R;
 import com.mx.sy.activity.AboutUsActivity;
+import com.mx.sy.activity.CollectionStatisticsActivity;
 import com.mx.sy.activity.FeedBackActivity;
 import com.mx.sy.activity.ManageDishesActivity;
 import com.mx.sy.activity.ManageDishesClassActivity;
@@ -30,10 +31,12 @@ import com.mx.sy.activity.ManageEmployeeActivity;
 import com.mx.sy.activity.ManageShopActivity;
 import com.mx.sy.activity.ManageTableActivity;
 import com.mx.sy.activity.ManageTablePartitionActivity;
+import com.mx.sy.activity.MemberStatisticsActivity;
 import com.mx.sy.activity.PrinterSeetingActivity;
 import com.mx.sy.activity.PushSeetingActivity;
 import com.mx.sy.activity.SalesStatisticsActivity;
 import com.mx.sy.activity.ServiceStatisticsActivity;
+import com.mx.sy.activity.TableStatisticsActivity;
 import com.mx.sy.activity.UserInfoActivity;
 import com.mx.sy.adapter.MineUserAdapter;
 import com.mx.sy.base.BaseFragment;
@@ -191,67 +194,82 @@ public class MineFragment extends BaseFragment {
                             startActivity(intent);
                             break;
                         case 2:
+                            //收款统计
+                            intent.setClass(getActivity(), CollectionStatisticsActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 3:
+                            //“桌台统计”
+                            intent.setClass(getActivity(), TableStatisticsActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 4:
+                            //“会员统计”
+                            intent.setClass(getActivity(), MemberStatisticsActivity.class);
+                            startActivity(intent);
+                            break;
+                        case 5:
                             //服务统计
                             intent.setClass(getActivity(), ServiceStatisticsActivity.class);
                             startActivity(intent);
                             break;
-                        case 3:
+                        case 6:
                             //推送消息
                             intent.setClass(getActivity(), SettingActivity.class);
                             startActivity(intent);
                             break;
-                        case 4:
+                        case 7:
                             //个人信息
                             intent.setClass(getActivity(), UserInfoActivity.class);
                             startActivity(intent);
                             break;
-                        case 5:
+                        case 8:
                             // 意见反馈
                             intent.setClass(getActivity(), FeedBackActivity.class);
                             startActivity(intent);
                             break;
-                        case 6:
+                        case 9:
                             // 关于我们
                             intent.setClass(getActivity(), AboutUsActivity.class);
                             startActivity(intent);
                             break;
-                        case 7:
+                        case 10:
                             // 店铺管理
                             intent.setClass(getActivity(), ManageShopActivity.class);
                             startActivity(intent);
                             break;
 
-                        case 8:
+                        case 11:
                             //打印机设置
                             intent.setClass(getActivity(), PrinterSeetingActivity.class);
                             startActivity(intent);
                             break;
-                        case 9:
+                        case 12:
                             // 员工管理
                             intent.setClass(getActivity(), ManageEmployeeActivity.class);
                             startActivity(intent);
                             break;
-                        case 10:
+                        case 13:
                             // 桌台分区
                             intent.setClass(getActivity(), ManageTablePartitionActivity.class);
                             startActivity(intent);
                             break;
-                        case 11:
+                        case 14:
                             // 桌台管理
                             intent.setClass(getActivity(), ManageTableActivity.class);
                             startActivity(intent);
                             break;
-                        case 12:
+                        case 15:
                             // 菜品分类
                             intent.setClass(getActivity(), ManageDishesClassActivity.class);
                             startActivity(intent);
                             break;
-                        case 13:
+                        case 16:
                             // 菜品管理
                             intent.setClass(getActivity(), ManageDishesActivity.class);
                             startActivity(intent);
                             break;
-                        case 14:
+                        case 17:
                             // 会员查询
                             LayoutInflater factory = LayoutInflater
                                     .from(getActivity());
@@ -352,12 +370,37 @@ public class MineFragment extends BaseFragment {
             userInfoMap1.put("isnbsp", "0");
             dateList.add(userInfoMap1);
 
+
+            HashMap<String, Object> userInfoMapnew1 = new HashMap<String, Object>();
+            userInfoMapnew1.put("content", "收款统计");
+            userInfoMapnew1.put("contentImg", R.drawable.icon_tip);
+            userInfoMapnew1.put("mytypeImg", R.drawable.icon_my2);
+            userInfoMapnew1.put("isnbsp", "0");
+            dateList.add(userInfoMapnew1);
+
+            HashMap<String, Object> userInfoMapnew2 = new HashMap<String, Object>();
+            userInfoMapnew2.put("content", "桌台统计");
+            userInfoMapnew2.put("contentImg", R.drawable.icon_tip);
+            userInfoMapnew2.put("mytypeImg", R.drawable.icon_my2);
+            userInfoMapnew2.put("isnbsp", "0");
+            dateList.add(userInfoMapnew2);
+
+            HashMap<String, Object> userInfoMapnew3 = new HashMap<String, Object>();
+            userInfoMapnew3.put("content", "会员统计");
+            userInfoMapnew3.put("contentImg", R.drawable.icon_tip);
+            userInfoMapnew3.put("mytypeImg", R.drawable.icon_my2);
+            userInfoMapnew3.put("isnbsp", "0");
+            dateList.add(userInfoMapnew3);
+
+
+
             HashMap<String, Object> userInfoMap2 = new HashMap<String, Object>();
             userInfoMap2.put("content", "服务统计");
             userInfoMap2.put("contentImg", R.drawable.icon_tip);
             userInfoMap2.put("mytypeImg", R.drawable.icon_my2);
             userInfoMap2.put("isnbsp", "0");
             dateList.add(userInfoMap2);
+
 
             HashMap<String, Object> userInfoMap3 = new HashMap<String, Object>();
             userInfoMap3.put("content", "推送消息");

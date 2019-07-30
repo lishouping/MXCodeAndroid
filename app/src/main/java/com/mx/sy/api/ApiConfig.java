@@ -131,4 +131,19 @@ public class ApiConfig {
 	public static String PRINTDEL = "/printer/deletePrinter";
 	// 打印机删除
 	public static String PRINTUPDATE = "/printer/updatePrinter";
+	// 销量及销售额查询
+	public static String GETSALESTSATICES = "/statics/getSaleStatics";
+	// 销量及销售额图表统计
+	public static String GETCHARS = "/statics/getSaleCharts";
+	// 桌台统计列表(分页)
+	public static String GETTABLESST = "/statics/getTableStatics";
+	// 菜品销量排行
+	public static String GETFOODSSTATICS = "/statics/getGoodsSales";
+	// 结账方式统计
+	public static String GETCHECKSTATICS = "/statics/getCheckStatics";
+	// 服务员统计
+	public static String GETWIRITESTATIS = "/statics/getWaiterStatics";
+
+
+
 }
