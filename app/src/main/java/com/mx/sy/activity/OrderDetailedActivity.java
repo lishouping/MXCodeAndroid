@@ -233,7 +233,7 @@ public class OrderDetailedActivity extends BaseActivity {
                 startActivity(intent2);
                 break;
             case R.id.btn_jiezhang_order:
-                final String[] items = {"现金", "微信", "支付宝"};
+                final String[] items = {"现金", "微信", "支付宝","微信扫码付", "支付宝扫码付"};
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
                 alertBuilder.setTitle("请选择付款方式");
                 alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
@@ -246,6 +246,16 @@ public class OrderDetailedActivity extends BaseActivity {
                             check_way = "2";
                         } else if (index == 2) {
                             check_way = "3";
+                        } else if (index == 3) {
+                            Intent intent = new Intent(OrderDetailedActivity.this, MipcaActivityCapture.class);
+                            intent.putExtra("pageType", "1");
+                            intent.putExtra("order_id",order_id );
+                            startActivity(intent);
+                        } else if (index == 4) {
+                            Intent intent = new Intent(OrderDetailedActivity.this, MipcaActivityCapture.class);
+                            intent.putExtra("pageType", "2");
+                            intent.putExtra("order_id",order_id );
+                            startActivity(intent);
                         }
                         check();
                     }

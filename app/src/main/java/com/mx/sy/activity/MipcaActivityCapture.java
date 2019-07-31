@@ -28,11 +28,19 @@ import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
+import com.mx.sy.api.ApiConfig;
 import com.mx.sy.zxing.camera.CameraManager;
 import com.mx.sy.zxing.decoding.CaptureActivityHandler;
 import com.mx.sy.zxing.decoding.InactivityTimer;
 import com.mx.sy.zxing.view.ViewfinderView;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Initial the camera
@@ -58,6 +66,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
      * pageType 2 表示支付宝支付扫码付款
      */
     private String pageType;
+    private String order_id;
 
     /**
      * Called when the activity is first created.
@@ -89,6 +98,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
         inactivityTimer = new InactivityTimer(this);
 
         pageType = getIntent().getStringExtra("pageType");
+        order_id = getIntent().getStringExtra("order_id");
 
     }
 
@@ -166,9 +176,9 @@ public class MipcaActivityCapture extends Activity implements Callback {
 
             }
         } else if (pageType.equals("1")) {
-
+            pay(pageType,order_id,resultString);
         } else if (pageType.equals("2")) {
-
+            pay(pageType,order_id,resultString);
         }
     }
 
@@ -274,4 +284,106 @@ public class MipcaActivityCapture extends Activity implements Callback {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    // 扫码支付
+    public void pay(String type, final String order_id, String client_no) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        String url = "";
+        if (type.equals("1")){
+            url = ApiConfig.API_URL + ApiConfig.WXPAY;
+        }else if (type.equals("2")){
+            url = ApiConfig.API_URL + ApiConfig.ALPAY;
+        }
+        RequestParams params = new RequestParams();
+        params.put("client_no", client_no);
+        params.put("order_id",order_id);
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            checkpay(order_id);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 验证
+    public void checkpay(String order_id) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        String url = ApiConfig.API_URL + ApiConfig.CHECKPAY;
+        RequestParams params = new RequestParams();
+        params.put("order_id",order_id);
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            if (OrderDetailedActivity.initactivitActivity!=null){
+                                OrderDetailedActivity.initactivitActivity.finish();
+                                OrderDetailedActivity.initactivitActivity = null;
+                            }
+
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

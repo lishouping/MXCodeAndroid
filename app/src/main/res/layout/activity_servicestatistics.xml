@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     <include layout="@layout/common_title" />
-<LinearLayout
+	<LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
@@ -66,140 +66,78 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/btn_month"
-                android:layout_width="42dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/shape_yeallo_btnbg"
-                android:text="月"
-                android:textColor="#fff"
-                android:textSize="12sp" />
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="30dp"
+			android:orientation="horizontal"
+			android:background="@color/gray_btn_bg_pressed_color"
+			>
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:orientation="vertical"
+				android:layout_weight="1.5"
+				android:gravity="center_vertical">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="13sp"
+					android:layout_marginLeft="15dp"
+					android:textColor="@color/suborder_color"
+					android:text="姓名"/>
+			</LinearLayout>
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:orientation="vertical"
+				android:layout_weight="1"
+				android:gravity="center">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="13sp"
+					android:textColor="@color/suborder_color"
+					android:text="订单数量"/>
+			</LinearLayout>
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:orientation="vertical"
+				android:gravity="center"
+				android:layout_weight="1">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="13sp"
+					android:textColor="@color/suborder_color"
+					android:text="下单次数"/>
+			</LinearLayout>
+			<LinearLayout
+				android:layout_width="0dp"
+				android:layout_height="fill_parent"
+				android:orientation="vertical"
+				android:gravity="center"
+				android:layout_weight="1">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="13sp"
+					android:textColor="@color/suborder_color"
+					android:text="服务次数"/>
+			</LinearLayout>
+		</LinearLayout>
+		<com.scwang.smartrefresh.layout.SmartRefreshLayout
+			android:id="@+id/pullrefresh_table"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/rv_static"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+		</com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-            <Button
-                android:id="@+id/btn_week"
-                android:layout_width="42dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/shape_yeallo_btnbg"
-                android:text="周"
-                android:textColor="#fff"
-                android:textSize="12sp" />
 
-            <Button
-                android:id="@+id/btn_day"
-                android:layout_width="42dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/shape_yeallo_btnbg"
-                android:text="日"
-                android:textColor="#fff"
-                android:textSize="12sp" />
-            <Button
-                android:id="@+id/btn_time"
-                android:layout_width="42dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/shape_yeallo_btnbg"
-                android:text="按时间"
-                android:textColor="#fff"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </LinearLayout>
-	<LinearLayout 
-	    android:id="@+id/lin_food_static"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical"
-	    android:layout_marginTop="10dp"
-	    >
-	    <LinearLayout 
-	        android:layout_width="fill_parent"
-	        android:layout_height="120dp"
-	        android:layout_marginLeft="15dp"
-	        android:layout_marginRight="15dp"
-	        android:gravity="center"
-	        android:background="@drawable/shape_static_bg"
-	        android:orientation="vertical"
-	        >
-	        <LinearLayout 
-	            android:layout_width="fill_parent"
-	            android:layout_height="40dp"
-	            android:gravity="center_vertical">
-	            <ImageView 
-	                android:layout_width="20dp"
-	                android:layout_height="20dp"
-	                android:layout_marginLeft="20dp"
-	                android:src="@drawable/num"/>
-	            <TextView 
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="服务数量:"
-	                android:layout_marginLeft="10dp"
-	                android:textSize="13sp"/>
-	             <TextView 
-	                android:id="@+id/tv_service_num"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_marginLeft="10dp"
-	                android:textSize="15sp"
-	                android:textColor="@color/suborder_color"
-	                />
-	        </LinearLayout>
-	         <LinearLayout 
-	            android:layout_width="fill_parent"
-	            android:layout_height="40dp"
-	            android:gravity="center_vertical">
-	            <ImageView 
-	                android:layout_width="20dp"
-	                android:layout_height="20dp"
-	                android:layout_marginLeft="20dp"
-	                android:src="@drawable/orderimg"/>
-	            <TextView 
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="订单数量:"
-	                android:layout_marginLeft="10dp"
-	                android:textSize="13sp"/>
-	             <TextView 
-	                android:id="@+id/tv_order_num"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_marginLeft="10dp"
-	                android:textSize="15sp"
-	                android:textColor="@color/suborder_color"
-	                />
-	        </LinearLayout>
-	         <LinearLayout 
-	            android:layout_width="fill_parent"
-	            android:layout_height="40dp"
-	            android:gravity="center_vertical">
-	            <ImageView 
-	                android:layout_width="20dp"
-	                android:layout_height="20dp"
-	                android:layout_marginLeft="20dp"
-	                android:src="@drawable/orderprice"/>
-	            <TextView 
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="结账订单数量:"
-	                android:layout_marginLeft="10dp"
-	                android:textSize="13sp"/>
-	             <TextView 
-	                android:id="@+id/tv_jiezhangorder_num"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_marginLeft="10dp"
-	                android:textSize="15sp"
-	                android:textColor="@color/suborder_color"
-	                />
-	        </LinearLayout>
-	    </LinearLayout>
-	    
+
 	</LinearLayout>
 </LinearLayout>

@@ -143,7 +143,12 @@ public class ApiConfig {
 	public static String GETCHECKSTATICS = "/statics/getCheckStatics";
 	// 服务员统计
 	public static String GETWIRITESTATIS = "/statics/getWaiterStatics";
-
+	// WxPay
+	public static String WXPAY = "/order/wxPayment";
+	// AlPay
+	public static String ALPAY = "/order/alipayPayment";
+	// 校验是否成功
+	public static String CHECKPAY = "/order/checkOrderPayment";
 
 
 }

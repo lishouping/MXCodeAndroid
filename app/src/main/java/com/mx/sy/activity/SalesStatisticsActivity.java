@@ -16,6 +16,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,6 +29,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -33,6 +39,9 @@ import com.mx.sy.adapter.SalesStaticsAdapter;
 import com.mx.sy.adapter.ServiceAdapter;
 import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseActivity;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 /**
  * <p>
@@ -61,10 +70,7 @@ public class SalesStatisticsActivity extends BaseActivity {
 	private int selectBtnFlag = 0;
 
 	private SharedPreferences preferences;
-	private List<HashMap<String, String>> dateList;
-	private SalesStaticsAdapter salesStaticsAdapter;
 
-	private ListView lv_food_static;
 
 	private String time_flag = "3";
 	private String start_time = "";
@@ -73,6 +79,16 @@ public class SalesStatisticsActivity extends BaseActivity {
 	private final static int DATE_DIALOG = 0;
 	private final static int TIME_DIALOG = 1;
 	private Calendar c = null;
+
+	int page = 1;
+	int total_page;
+	int totalnum;
+
+	private RecyclerView lv_food_static;
+	MyAdapter myAdapter;
+	private List<HashMap<String,String>> myList;
+
+	RefreshLayout mPullToRefreshView;
 
 	@Override
 	public void widgetClick(View v) {
@@ -174,6 +190,8 @@ public class SalesStatisticsActivity extends BaseActivity {
 
 		btn_start_time = $(R.id.btn_start_time);
 		btn_end_time = $(R.id.btn_end_time);
+
+		mPullToRefreshView = findViewById(R.id.pullrefresh_table);
 	}
 
 	@Override
@@ -182,9 +200,35 @@ public class SalesStatisticsActivity extends BaseActivity {
 		tv_title.setText("销售统计");
 		preferences = getSharedPreferences("userinfo",
 				LoginActivity.MODE_PRIVATE);
-		dateList = new ArrayList<HashMap<String, String>>();
-		salesStaticsAdapter = new SalesStaticsAdapter(getApplicationContext(),
-				dateList, R.layout.item_salesstatics);
+
+		lv_food_static.setLayoutManager(new LinearLayoutManager(this));
+		myList = new ArrayList<HashMap<String, String>>();
+		myAdapter = new MyAdapter(R.layout.item_salesstatics,myList);
+		lv_food_static.setAdapter(myAdapter);
+
+		mPullToRefreshView.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh(RefreshLayout refreshlayout) {
+				refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+				myList.clear();
+				myAdapter.notifyDataSetChanged();
+				page = 1;
+				selectgoodstatic();
+			}
+		});
+		mPullToRefreshView.setOnLoadMoreListener(new OnLoadMoreListener() {
+			@Override
+			public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+				refreshLayout.finishLoadMore(2000/*,false*/);//传入false表示刷新失败
+				if (myList.size() == totalnum) {
+					Toast.makeText(SalesStatisticsActivity.this, "没有更多数据了", Toast.LENGTH_LONG)
+							.show();
+				} else {
+					page++;
+					selectgoodstatic();
+				}
+			}
+		});
 
 	}
 
@@ -240,22 +284,15 @@ public class SalesStatisticsActivity extends BaseActivity {
 
 	// 获取菜品销量统计
 	public void selectgoodstatic() {
-		if (dateList.size()>0) {
-			dateList.clear();
-			salesStaticsAdapter.notifyDataSetChanged();
-		}
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.addHeader("key", preferences.getString("loginkey", ""));
 		client.addHeader("id", preferences.getString("userid", ""));
-		String url = ApiConfig.API_URL + ApiConfig.GOODSSTATICS;
+		String url = ApiConfig.API_URL + ApiConfig.GETFOODSSTATICS;
 		RequestParams params = new RequestParams();
 		params.put("shop_id", preferences.getString("shop_id", ""));
-		if (time_flag.equals("-1")) {
-			params.put("start_time", start_time);
-			params.put("end_time", end_time);
-		} else {
-			params.put("time_flag", time_flag);
-		}
+		params.put("start_date", start_time);
+		params.put("end_date", end_time);
+		params.put("page_no",page);
 		client.post(url, params, new AsyncHttpResponseHandler() {
 
 			@Override
@@ -269,21 +306,33 @@ public class SalesStatisticsActivity extends BaseActivity {
 						String CODE = jsonObject.getString("CODE");
 						if (CODE.equals("1000")) {
 							dissmissDilog();
-							JSONArray jsonArray = new JSONArray(jsonObject
-									.getString("DATA"));
-							for (int i = 0; i < jsonArray.length(); i++) {
-								JSONObject object = jsonArray.getJSONObject(i);
-								String GOOD_NAME = object
-										.getString("GOOD_NAME");
-								String zs = object.getString("zs");
-								String ze = object.getString("ze");
-								HashMap<String, String> map = new HashMap<String, String>();
-								map.put("good_name", GOOD_NAME);
-								map.put("good_zs", zs);// 销售数量
-								map.put("good_ze", ze);// 销售金额
-								dateList.add(map);
+							JSONObject jsonObject1 = new JSONObject(jsonObject.getString("DATA"));
+							totalnum = Integer.parseInt(jsonObject1.getString("totalnum"));
+							total_page = Integer.parseInt(jsonObject1.getString("total_page"));
+							JSONArray jsonArray = new JSONArray(jsonObject1
+									.getString("list"));
+							if (jsonArray.length()==0){
+								Toast.makeText(getApplicationContext(),
+										"暂无数据",
+										Toast.LENGTH_SHORT).show();
+							}else {
+								for (int i = 0; i < jsonArray.length(); i++) {
+
+									JSONObject object = jsonArray.getJSONObject(i);
+									String GOOD_NAME = object
+											.getString("GOOD_NAME");
+									String total_sales_count = object.getString("total_sales_count");
+									String total_sales_money = object.getString("total_sales_money");
+
+									HashMap<String,String> map = new HashMap<>();
+									map.put("GOOD_NAME", GOOD_NAME);
+									map.put("total_sales_count", total_sales_count);// 销售数量
+									map.put("total_sales_money", total_sales_money);// 销售金额
+									myList.add(map);
+								}
+								myAdapter.notifyDataSetChanged();
 							}
-							lv_food_static.setAdapter(salesStaticsAdapter);
+
 						} else {
 							Toast.makeText(getApplicationContext(),
 									jsonObject.getString("MESSAGE"),
@@ -416,5 +465,20 @@ public class SalesStatisticsActivity extends BaseActivity {
 			break;
 		}
 		return dialog;
+	}
+
+	public class MyAdapter extends BaseQuickAdapter<HashMap<String,String>,BaseViewHolder> {
+
+		public MyAdapter(int layoutResId, @Nullable List<HashMap<String, String>> data) {
+			super(layoutResId, data);
+		}
+
+		@Override
+		protected void convert(BaseViewHolder helper, HashMap<String, String> item) {
+			helper.setText(R.id.tv_item_num1,helper.getAdapterPosition()+1+"");
+			helper.setText(R.id.tv_food_name,item.get("GOOD_NAME"));
+			helper.setText(R.id.tv_foodnum,item.get("total_sales_count"));
+			helper.setText(R.id.tv_total_price,item.get("total_sales_money"));
+		}
 	}
 }

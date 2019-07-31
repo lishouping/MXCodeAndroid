@@ -120,7 +120,7 @@ public class TableStatisticsActivity  extends BaseActivity {
         tv_title = $(R.id.tv_title);
         iv_icon = $(R.id.iv_icon);
         iv_icon.setImageResource(R.drawable.ic_search);
-        tv_title.setText("收款统计");
+        tv_title.setText("桌台统计");
         ll_right = $(R.id.ll_right);
         ll_right.setVisibility(View.VISIBLE);
         btn_start_time = $(R.id.btn_start_time);
