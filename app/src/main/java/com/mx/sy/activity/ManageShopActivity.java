@@ -119,7 +119,8 @@ public class ManageShopActivity extends BaseActivity {
                                 new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
-                                        updateShopInfo();
+                                        //updateShopInfo();
+                                        uploadImage();
                                         sDialog.cancel();
                                     }
                                 })
@@ -356,22 +357,15 @@ public class ManageShopActivity extends BaseActivity {
         });
     }
 
-    // 更新店铺
-    public void updateShopInfo() {
+    // 更新图片
+    public void uploadImage(){
+
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("key", preferences.getString("loginkey", ""));
         client.addHeader("id", preferences.getString("userid", ""));
-        String url = ApiConfig.API_URL + ApiConfig.UPDATESHOP;
+        String url = ApiConfig.API_URL + ApiConfig.UPLOADIMAGE;
         RequestParams params = new RequestParams();
         params.put("shop_id",shop_id);
-        params.put("shop_name",mEtShopname.getText()+"");
-        params.put("address",mEtAddress.getText()+"");
-        params.put("shop_owner_name",mEtShoppersonname.getText()+"");
-        params.put("shop_owner_phone",mEtPhone.getText()+"");
-        params.put("introduction",mEtInfo.getText()+"");
-        params.put("notice",mEtNotice.getText()+"");
-        params.put("begin_time",mBtnStartTime.getText()+"");
-        params.put("end_time",mBtnEndTime.getText()+"");
         if (!logoFile.equals("")){
             File file = new File(logoFile);
             try {
@@ -396,6 +390,82 @@ public class ManageShopActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }
+        client.post(url,params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")){
+                            updateShopInfo();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
+    }
+
+    // 更新店铺
+    public void updateShopInfo() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.UPDATESHOP;
+        RequestParams params = new RequestParams();
+        params.put("shop_id",shop_id);
+        params.put("shop_name",mEtShopname.getText()+"");
+        params.put("address",mEtAddress.getText()+"");
+        params.put("shop_owner_name",mEtShoppersonname.getText()+"");
+        params.put("shop_owner_phone",mEtPhone.getText()+"");
+        params.put("introduction",mEtInfo.getText()+"");
+        params.put("notice",mEtNotice.getText()+"");
+        params.put("begin_time",mBtnStartTime.getText()+"");
+        params.put("end_time",mBtnEndTime.getText()+"");
+//        if (!logoFile.equals("")){
+//            File file = new File(logoFile);
+//            try {
+//                params.put("file",file);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if (!wxFile.equals("")){
+//            File file = new File(wxFile);
+//            try {
+//                params.put("wechat_img_file",file);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if (!alpayFile.equals("")){
+//            File file = new File(alpayFile);
+//            try {
+//                params.put("alipay_img_file",file);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
         client.post(url,params, new AsyncHttpResponseHandler() {
 
             @Override
