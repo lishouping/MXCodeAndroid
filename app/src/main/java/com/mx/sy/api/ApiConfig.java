@@ -149,6 +149,7 @@ public class ApiConfig {
 	public static String ALPAY = "/order/alipayPayment";
 	// 校验是否成功
 	public static String CHECKPAY = "/order/checkOrderPayment";
-
+	// 店铺图修改
+	public static String UPLOADIMAGE = "/upload/uploadShopImage";
 
 }
