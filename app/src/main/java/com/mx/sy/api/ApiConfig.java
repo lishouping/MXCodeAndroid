@@ -7,6 +7,8 @@ public class ApiConfig {
 
 	public static String RESOURCE_URL = "http://www.heyguy.cn/images/";
 
+	public static String UPLOADIMAGE_URL = "http://39.104.125.56:8080/heygay/";
+
 	public static String getAbsoluteApiUrl(String partUrl) {
 		String url = partUrl;
 		if (!partUrl.startsWith("http:") && !partUrl.startsWith("https:")) {
@@ -151,5 +153,7 @@ public class ApiConfig {
 	public static String CHECKPAY = "/order/checkOrderPayment";
 	// 店铺图修改
 	public static String UPLOADIMAGE = "/upload/uploadShopImage";
+	// 菜品图片上传
+	public static String UPLOADCAIPINIMAGE = "/upload/updateImagesReturnUrl";
 
 }

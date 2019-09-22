@@ -66,6 +66,7 @@ public class ManageShopActivity extends BaseActivity {
     private ImageView img_shop, img_wx, img_alpay;
 
     private SharedPreferences preferences;
+    private String print_way = "1";
     private String shop_id;
     private String logoFile = "";
     private String wxFile = "";
@@ -99,7 +100,11 @@ public class ManageShopActivity extends BaseActivity {
                     public void onClick(DialogInterface arg0, int index) {
                         alertDialog.dismiss();
                         if (index == 0) {
-
+                            print_way = "2";
+                            btn_selelct_print.setText("一单一打");
+                        }else {
+                            print_way = "1";
+                            btn_selelct_print.setText("一菜一打");
                         }
                     }
                 });
@@ -120,7 +125,11 @@ public class ManageShopActivity extends BaseActivity {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
                                         //updateShopInfo();
-                                        uploadImage();
+                                        try {
+                                            uploadImage();
+                                        } catch (FileNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
                                         sDialog.cancel();
                                     }
                                 })
@@ -324,6 +333,33 @@ public class ManageShopActivity extends BaseActivity {
                             // 营业结束时间
                             String end_time = jsonObject2.getString("end_time");
                             mBtnEndTime.setText(end_time);
+
+
+                            String shop_phone = jsonObject2.getString("shop_phone");
+                            et_shop_phone.setText(shop_phone);
+
+
+                            String print_way = jsonObject2.getString("print_way");
+                            if (print_way.equals("1")){
+                                btn_selelct_print.setText("一菜一打");
+                            }else {
+                                btn_selelct_print.setText("一单一打");
+                            }
+
+                            String  cooker_off_time = jsonObject2.getString("cooker_off_time");
+                            btn_chef_work.setText(cooker_off_time);
+
+                            String last_check_time = jsonObject2.getString("last_check_time");
+                            btn_checkout_time.setText(last_check_time);
+
+                            String other = jsonObject2.getString("other");
+                            et_service.setText(other);
+
+                            String offer = jsonObject2.getString("offer");
+                            et_recr_info.setText(offer);
+
+
+
                             //微信支付图片
                             String wechat_img = jsonObject2.getString("wechat_img");
                             MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + wechat_img, img_wx, true);
@@ -357,72 +393,176 @@ public class ManageShopActivity extends BaseActivity {
         });
     }
 
-    // 更新图片
-    public void uploadImage(){
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("key", preferences.getString("loginkey", ""));
-        client.addHeader("id", preferences.getString("userid", ""));
-        String url = ApiConfig.API_URL + ApiConfig.UPLOADIMAGE;
-        RequestParams params = new RequestParams();
-        params.put("shop_id",shop_id);
-        if (!logoFile.equals("")){
-            File file = new File(logoFile);
-            try {
-                params.put("file",file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+    //上传图片如果有的话 // 店铺LOGO
+    public void uploadImage() throws FileNotFoundException {
+        if (!logoFile.equals("")) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("key", preferences.getString("loginkey", ""));
+            client.addHeader("id", preferences.getString("userid", ""));
+            String url = ApiConfig.UPLOADIMAGE_URL + ApiConfig.UPLOADCAIPINIMAGE;
+            RequestParams params = new RequestParams();
+            params.put("shop_id", preferences.getString("shop_id", ""));
+            if (!logoFile.equals("")) {
+                File file = new File(logoFile);
+                params.put("file", file);
             }
-        }
-        if (!wxFile.equals("")){
-            File file = new File(wxFile);
-            try {
-                params.put("wechat_img_file",file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (!alpayFile.equals("")){
-            File file = new File(alpayFile);
-            try {
-                params.put("alipay_img_file",file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        client.post(url,params, new AsyncHttpResponseHandler() {
+            client.post(url, params, new AsyncHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-                // TODO Auto-generated method stub
-                if (arg0 == 200) {
-                    try {
-                        String response = new String(arg2, "UTF-8");
-                        com.orhanobut.logger.Logger.d(response);
-                        JSONObject jsonObject = new JSONObject(response);
-                        String CODE = jsonObject.getString("CODE");
-                        if (CODE.equals("1000")){
-                            updateShopInfo();
+                @Override
+                public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                    // TODO Auto-generated method stub
+                    if (arg0 == 200) {
+                        try {
+                            String response = new String(arg2, "UTF-8");
+                            com.orhanobut.logger.Logger.d(response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            String CODE = jsonObject.getString("CODE");
+                            if (CODE.equals("1000")) {
+                                String url = jsonObject.getString("URL");
+                                logoFile = url;
+                                uploadImage1();
+                            }
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                            dissmissDilog();
                         }
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "服务器异常",
-                                Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                @Override
+                public void onProgress(int bytesWritten, int totalSize) {
+                    super.onProgress(bytesWritten, totalSize);
+                    com.orhanobut.logger.Logger.d(bytesWritten);
+                }
+
+                @Override
+                public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                      Throwable arg3) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(getApplicationContext(), "上传图片失败",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            uploadImage1();
+        }
+
+
+    }
+
+    // 微信LOGO
+    public void uploadImage1() throws FileNotFoundException {
+        if (!wxFile.equals("")) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("key", preferences.getString("loginkey", ""));
+            client.addHeader("id", preferences.getString("userid", ""));
+            String url = ApiConfig.UPLOADIMAGE_URL + ApiConfig.UPLOADCAIPINIMAGE;
+            RequestParams params = new RequestParams();
+            params.put("shop_id", preferences.getString("shop_id", ""));
+            if (!wxFile.equals("")) {
+                File file = new File(wxFile);
+                params.put("file", file);
             }
+            client.post(url, params, new AsyncHttpResponseHandler() {
 
-            @Override
-            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-                                  Throwable arg3) {
-                // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), "服务器异常",
-                        Toast.LENGTH_LONG).show();
+                @Override
+                public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                    // TODO Auto-generated method stub
+                    if (arg0 == 200) {
+                        try {
+                            String response = new String(arg2, "UTF-8");
+                            com.orhanobut.logger.Logger.d(response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            String CODE = jsonObject.getString("CODE");
+                            if (CODE.equals("1000")) {
+                                String url = jsonObject.getString("URL");
+                                wxFile = url;
+                                uploadImage2();
+                            }
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                            dissmissDilog();
+                        }
+                    }
+                }
+
+                @Override
+                public void onProgress(int bytesWritten, int totalSize) {
+                    super.onProgress(bytesWritten, totalSize);
+                    com.orhanobut.logger.Logger.d(bytesWritten);
+                }
+
+                @Override
+                public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                      Throwable arg3) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(getApplicationContext(), "上传图片失败",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            uploadImage2();
+        }
+
+    }
+
+    // 支付宝LOGO
+    public void uploadImage2() throws FileNotFoundException {
+        if (!alpayFile.equals("")) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("key", preferences.getString("loginkey", ""));
+            client.addHeader("id", preferences.getString("userid", ""));
+            String url = ApiConfig.UPLOADIMAGE_URL + ApiConfig.UPLOADCAIPINIMAGE;
+            RequestParams params = new RequestParams();
+            params.put("shop_id", preferences.getString("shop_id", ""));
+            if (!alpayFile.equals("")) {
+                File file = new File(alpayFile);
+                params.put("file", file);
             }
-        });
+            client.post(url, params, new AsyncHttpResponseHandler() {
 
+                @Override
+                public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                    // TODO Auto-generated method stub
+                    if (arg0 == 200) {
+                        try {
+                            String response = new String(arg2, "UTF-8");
+                            com.orhanobut.logger.Logger.d(response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            String CODE = jsonObject.getString("CODE");
+                            if (CODE.equals("1000")) {
+                                String url = jsonObject.getString("URL");
+                                alpayFile = url;
+                                updateShopInfo();
+                            }
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                            dissmissDilog();
+                        }
+                    }
+                }
 
+                @Override
+                public void onProgress(int bytesWritten, int totalSize) {
+                    super.onProgress(bytesWritten, totalSize);
+                    com.orhanobut.logger.Logger.d(bytesWritten);
+                }
+
+                @Override
+                public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                      Throwable arg3) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(getApplicationContext(), "上传图片失败",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            updateShopInfo();
+        }
 
     }
 
@@ -433,40 +573,31 @@ public class ManageShopActivity extends BaseActivity {
         client.addHeader("id", preferences.getString("userid", ""));
         String url = ApiConfig.API_URL + ApiConfig.UPDATESHOP;
         RequestParams params = new RequestParams();
-        params.put("shop_id",shop_id);
-        params.put("shop_name",mEtShopname.getText()+"");
-        params.put("address",mEtAddress.getText()+"");
-        params.put("shop_owner_name",mEtShoppersonname.getText()+"");
-        params.put("shop_owner_phone",mEtPhone.getText()+"");
-        params.put("introduction",mEtInfo.getText()+"");
-        params.put("notice",mEtNotice.getText()+"");
-        params.put("begin_time",mBtnStartTime.getText()+"");
-        params.put("end_time",mBtnEndTime.getText()+"");
-//        if (!logoFile.equals("")){
-//            File file = new File(logoFile);
-//            try {
-//                params.put("file",file);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        if (!wxFile.equals("")){
-//            File file = new File(wxFile);
-//            try {
-//                params.put("wechat_img_file",file);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        if (!alpayFile.equals("")){
-//            File file = new File(alpayFile);
-//            try {
-//                params.put("alipay_img_file",file);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        client.post(url,params, new AsyncHttpResponseHandler() {
+        params.put("shop_id", shop_id);
+        params.put("shop_name", mEtShopname.getText() + "");
+        params.put("address", mEtAddress.getText() + "");
+        params.put("shop_owner_name", mEtShoppersonname.getText() + "");
+        params.put("shop_owner_phone", mEtPhone.getText() + "");
+        params.put("introduction", mEtInfo.getText() + "");
+        params.put("notice", mEtNotice.getText() + "");
+        params.put("begin_time", mBtnStartTime.getText() + "");
+        params.put("end_time", mBtnEndTime.getText() + "");
+        params.put("shop_phone",et_shop_phone.getText().toString());
+        params.put("print_way",print_way);
+        params.put("cooker_off_time",btn_chef_work.getText().toString());
+        params.put("last_check_time",btn_checkout_time.getText().toString());
+        params.put("other",et_service.getText().toString());
+        params.put("offer",et_recr_info.getText().toString());
+        if (!logoFile.equals("")) {
+            params.put("file", logoFile);
+        }
+        if (!wxFile.equals("")) {
+            params.put("wechat_img_file", wxFile);
+        }
+        if (!alpayFile.equals("")) {
+            params.put("alipay_img_file", alpayFile);
+        }
+        client.post(url, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
@@ -477,8 +608,8 @@ public class ManageShopActivity extends BaseActivity {
                         com.orhanobut.logger.Logger.d(response);
                         JSONObject jsonObject = new JSONObject(response);
                         String CODE = jsonObject.getString("CODE");
-                        if (CODE.equals("1000")){
-                            Toast.makeText(ManageShopActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(ManageShopActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block

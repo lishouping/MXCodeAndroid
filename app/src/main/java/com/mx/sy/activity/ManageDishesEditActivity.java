@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ManageDishesAddActivity extends BaseActivity {
+public class ManageDishesEditActivity extends BaseActivity {
 
     private LinearLayout ll_back;
     private TextView tv_title;
@@ -54,8 +54,8 @@ public class ManageDishesAddActivity extends BaseActivity {
     private ImageView iv_icon;
     private Button btn_sumbit;
     private AlertDialog alertDialog;
-    private EditText et_dis_name, et_dis_price, et_dis_vip_price, et_dis_discontent, et_dis_prief;
-    private Button select_dis_class, select_is_tuijian, select_goods_flag, select_goods_toast;
+    private EditText et_dis_name, et_dis_price, et_dis_vip_price, et_dis_discontent, et_dis_prief,et_sales_count;
+    private Button select_dis_class, select_goods_status;
     ImageView img_dic_class;
 
     /**
@@ -85,9 +85,7 @@ public class ManageDishesAddActivity extends BaseActivity {
     private String goods_id;
     private String category_name;
 
-    private String tuijian = "0";
-    private String goodFlag = "0";
-    private String isalert = "";
+    private String status = "";
 
     @Override
     public void widgetClick(View v) {
@@ -97,22 +95,10 @@ public class ManageDishesAddActivity extends BaseActivity {
                 break;
             case R.id.btn_sumbit:
                 if (et_dis_name.getText().toString().equals("")) {
-                    Toast.makeText(ManageDishesAddActivity.this, "请填写菜品名", Toast
+                    Toast.makeText(ManageDishesEditActivity.this, "请填写菜品名", Toast
                             .LENGTH_SHORT).show();
                 } else if (foodClassId.equals("")) {
-                    Toast.makeText(ManageDishesAddActivity.this, "请选择菜品分类", Toast
-                            .LENGTH_SHORT).show();
-                } else if (et_dis_price.getText().toString().equals("")) {
-                    Toast.makeText(ManageDishesAddActivity.this, "请填写菜品单价", Toast
-                            .LENGTH_SHORT).show();
-                } else if (et_dis_discontent.getText().toString().equals("")) {
-                    Toast.makeText(ManageDishesAddActivity.this, "请填写菜品折扣", Toast
-                            .LENGTH_SHORT).show();
-                }else if (et_dis_vip_price.getText().toString().equals("")) {
-                    Toast.makeText(ManageDishesAddActivity.this, "请填写会员价格", Toast
-                            .LENGTH_SHORT).show();
-                }else if (TextUtils.isEmpty(isalert)) {
-                    Toast.makeText(ManageDishesAddActivity.this, "请选择是否弹窗推荐", Toast
+                    Toast.makeText(ManageDishesEditActivity.this, "请选择菜品分类", Toast
                             .LENGTH_SHORT).show();
                 }else {
                     new SweetAlertDialog(this,
@@ -151,70 +137,30 @@ public class ManageDishesAddActivity extends BaseActivity {
                                     }).show();
                 }
                 break;
-            case R.id.select_is_tuijian:
-                final String[] items = {"是", "否"};
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageDishesAddActivity.this);
+            case R.id.select_goods_status:
+                final String[] items = {"正常", "下架"};
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageDishesEditActivity.this);
                 alertBuilder.setTitle("是否推荐菜品");
                 alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int index) {
                         alertDialog.dismiss();
                         if (index == 0) {
-                            tuijian = "1";
-                            select_is_tuijian.setText("是");
+                            status = "1";
+                            select_goods_status.setText("正常");
                         } else if (index == 1) {
-                            tuijian = "0";
-                            select_is_tuijian.setText("否");
+                            status = "0";
+                            select_goods_status.setText("下架");
                         }
                     }
                 });
                 alertDialog = alertBuilder.create();
                 alertDialog.show();
                 break;
-            case R.id.select_goods_flag:
-                final String[] items1 = {"多重规格", "非多重规格"};
-                AlertDialog.Builder alertBuilder2 = new AlertDialog.Builder(ManageDishesAddActivity.this);
-                alertBuilder2.setTitle("请选择规格类型");
-                alertBuilder2.setItems(items1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int index) {
-                        alertDialog.dismiss();
-                        if (index == 0) {
-                            goodFlag = "1";
-                            select_goods_flag.setText("多重规格");
-                        } else if (index == 1) {
-                            goodFlag = "0";
-                            select_goods_flag.setText("非多重规格");
-                        }
-                    }
-                });
-                alertDialog = alertBuilder2.create();
-                alertDialog.show();
-                break;
-            case R.id.select_goods_toast:
-                final String[] items3 = {"是", "否"};
-                AlertDialog.Builder alertBuilder3 = new AlertDialog.Builder(ManageDishesAddActivity.this);
-                alertBuilder3.setTitle("是否弹窗推荐");
-                alertBuilder3.setItems(items3, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int index) {
-                        alertDialog.dismiss();
-                        if (index == 0) {
-                            isalert = "1";
-                            select_goods_toast.setText("是");
-                        } else if (index == 1) {
-                            isalert = "0";
-                            select_goods_toast.setText("否");
-                        }
-                    }
-                });
-                alertDialog = alertBuilder3.create();
-                alertDialog.show();
-                break;
             case R.id.select_dis_class:
 
                 view = getLayoutInflater().inflate(R.layout.dialog_rv, null);
-                AlertDialog.Builder alertBuilder1 = new AlertDialog.Builder(ManageDishesAddActivity.this);
+                AlertDialog.Builder alertBuilder1 = new AlertDialog.Builder(ManageDishesEditActivity.this);
                 alertBuilder1.setTitle("请选择分类");
                 alertBuilder1.setView(view);
                 alertDialog = alertBuilder1.create();
@@ -316,7 +262,7 @@ public class ManageDishesAddActivity extends BaseActivity {
 
     @Override
     public int bindLayout() {
-        return R.layout.activity_manage_dishesadd;
+        return R.layout.activity_manage_dishesaedit;
     }
 
     @Override
@@ -329,9 +275,7 @@ public class ManageDishesAddActivity extends BaseActivity {
         et_dis_vip_price = $(R.id.et_dis_vip_price);
         et_dis_discontent = $(R.id.et_dis_discontent);
         select_dis_class = $(R.id.select_dis_class);
-        select_is_tuijian = $(R.id.select_is_tuijian);
-        select_goods_flag = $(R.id.select_goods_flag);
-        select_goods_toast = $(R.id.select_goods_toast);
+        select_goods_status = $(R.id.select_goods_status);
         et_dis_prief = $(R.id.et_dis_prief);
         img_dic_class = $(R.id.img_dic_class);
         rv_spcif = $(R.id.rv_spcif);
@@ -339,6 +283,7 @@ public class ManageDishesAddActivity extends BaseActivity {
         ll_right = $(R.id.ll_right);
         iv_icon = $(R.id.iv_icon);
         iv_icon.setImageResource(R.drawable.ic_add);
+        et_sales_count = findViewById(R.id.et_sales_count);
     }
 
     @Override
@@ -374,7 +319,7 @@ public class ManageDishesAddActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final String[] items = {"修改", "删除"};
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageDishesAddActivity.this);
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ManageDishesEditActivity.this);
                 alertBuilder.setTitle("请选择操作");
                 alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -399,9 +344,7 @@ public class ManageDishesAddActivity extends BaseActivity {
         ll_back.setOnClickListener(this);
         btn_sumbit.setOnClickListener(this);
         select_dis_class.setOnClickListener(this);
-        select_is_tuijian.setOnClickListener(this);
-        select_goods_flag.setOnClickListener(this);
-        select_goods_toast.setOnClickListener(this);
+        select_goods_status.setOnClickListener(this);
         img_dic_class.setOnClickListener(this);
         ll_right.setVisibility(View.VISIBLE);
         ll_right.setOnClickListener(this);
@@ -566,9 +509,6 @@ public class ManageDishesAddActivity extends BaseActivity {
         if (!TextUtils.isEmpty(imageUrl)) {
             params.put("img_url", imageUrl);
         }
-        params.put("tuijian", tuijian);
-        params.put("good_exts_flag", goodFlag);
-        params.put("if_alert", isalert);
         client.post(url, params, new AsyncHttpResponseHandler() {
 
             @Override
@@ -634,9 +574,10 @@ public class ManageDishesAddActivity extends BaseActivity {
                             String discount = jsonObject1.getString("discount");
                             String img_url = jsonObject1.getString("img_url");
                             String introduction = jsonObject1.getString("introduction");
-                            String tuijian = jsonObject1.getString("tuijian");
+                            String status = jsonObject1.getString("status");
                             String good_exts_flag = jsonObject1.getString("good_exts_flag");
                             String if_alert = jsonObject1.getString("if_alert");
+                            String sales_count = jsonObject1.getString("sales_count");
 
                             et_dis_name.setText(goods_name);
                             et_dis_price.setText(pre_price);
@@ -644,23 +585,14 @@ public class ManageDishesAddActivity extends BaseActivity {
                             et_dis_prief.setText(introduction);
                             et_dis_vip_price.setText(vip_price);
 
-                            if (tuijian.equals("0")){
-                                select_is_tuijian.setText("否");
+                            if (status.equals("0")){
+                                select_goods_status.setText("下架");
                             }else {
-                                select_is_tuijian.setText("是");
+                                select_goods_status.setText("正常");
                             }
 
-                            if (good_exts_flag.equals("0")){
-                                select_goods_flag.setText("多重规格");
-                            }else {
-                                select_goods_flag.setText("非多重规格");
-                            }
+                            et_sales_count.setText(sales_count);
 
-                            if (if_alert.equals("0")){
-                                select_goods_toast.setText("否");
-                            }else {
-                                select_goods_toast.setText("是");
-                            }
 
                             MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + img_url, img_dic_class, true);
 
@@ -694,16 +626,17 @@ public class ManageDishesAddActivity extends BaseActivity {
         params.put("good_id", goods_id);
         params.put("discount", et_dis_discontent.getText().toString());
         params.put("goods_name", et_dis_name.getText().toString());
+        if (!TextUtils.isEmpty(imageUrl)) {
+            params.put("img_url", imageUrl);
+        }
         params.put("shop_id", preferences.getString("shop_id", ""));
         params.put("category_id", foodClassId);
         params.put("pre_price", et_dis_price.getText().toString());
         params.put("vip_price", et_dis_vip_price.getText().toString());
-        params.put("", et_dis_discontent.getText().toString());
-        params.put("introdudiscountction", et_dis_prief.getText().toString());
-        if (!TextUtils.isEmpty(imageUrl)) {
-            params.put("img_url", imageUrl);
-        }
-
+        params.put("discount", et_dis_discontent.getText().toString());
+        params.put("introduction", et_dis_prief.getText().toString());
+        params.put("status",status);
+        params.put("sales_count",et_sales_count.getText().toString());
         client.post(url, params, new AsyncHttpResponseHandler() {
 
             @Override

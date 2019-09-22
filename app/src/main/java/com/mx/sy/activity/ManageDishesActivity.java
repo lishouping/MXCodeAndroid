@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -161,7 +162,7 @@ public class ManageDishesActivity extends BaseActivity {
                             intent.putExtra("category_name", mapList.get(position).get("category_name"));
                             startActivity(intent);
                         } else if (index == 1) {
-                            Intent intent = new Intent(ManageDishesActivity.this, ManageDishesAddActivity.class);
+                            Intent intent = new Intent(ManageDishesActivity.this, ManageDishesEditActivity.class);
                             intent.putExtra("pagetype", "2");
                             intent.putExtra("goods_id", mapList.get(position).get("good_id"));
                             intent.putExtra("category_name", mapList.get(position).get("category_name"));
@@ -226,6 +227,15 @@ public class ManageDishesActivity extends BaseActivity {
         public void afterTextChanged(Editable s) {
             String money = edit_search_food.getText().toString();
             Log.d("------", money);
+
+
+            if (TextUtils.isEmpty(money)){
+                mapList.clear();
+                manageDishesAdapter.notifyDataSetChanged();
+                selectFood();
+            }else {
+                getDisheName(money);
+            }
         }
     };
 
@@ -234,7 +244,6 @@ public class ManageDishesActivity extends BaseActivity {
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
                 String money = edit_search_food.getText().toString();
-                Log.d("------", money);
                 return true;
             }
             return false;
@@ -409,6 +418,25 @@ public class ManageDishesActivity extends BaseActivity {
         manageDishesAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 查询菜品名
+     */
+    private void getDisheName(String content){
+        if (mapList.size() > 0){
+            for (int i = 0; i < mapList.size(); i++) {
+
+                if (content.contains(mapList.get(i).get("goods_name"))){
+                    HashMap<String, String> map = mapList.get(i);
+                    mapList.clear();
+                    mapList.add(map);
+                    manageDishesAdapter.notifyDataSetChanged();
+                }
+
+            }
+        }
+
+    }
+
     //删除菜品
     public void delFood(String good_id) {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -432,7 +460,7 @@ public class ManageDishesActivity extends BaseActivity {
                                     Toast.LENGTH_SHORT).show();
                             mapList.clear();
                             manageDishesAdapter.notifyDataSetChanged();
-                            //selectFood();
+                            selectFood();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
