@@ -54,6 +54,8 @@ public class ApiConfig {
 	public static String GETORDERBYNO = "/order/getOneOrderBynNum";
 	// 划菜
 	public static String GOODSUPDATE = "/cart/updateGoodsIfUp";
+	// 赠菜
+	public static String SONGGOODS = "/cart/songGoods";
 	// 修改时价菜价格
 	public static String UPDATEGOODSPRICE = "/cart/updateGoodsPrice";
 	// 退菜

@@ -340,7 +340,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
         String url = ApiConfig.API_URL + ApiConfig.CHECKPAY;
         RequestParams params = new RequestParams();
         params.put("order_id",order_id);
-        client.post(url, params, new AsyncHttpResponseHandler() {
+        client.get(url, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {

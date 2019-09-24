@@ -119,59 +119,74 @@ public class PrinterSeetingActivity extends BaseActivity {
                     public void onClick(DialogInterface arg0, int index) {
                         alertDialog.dismiss();
                         if (index == 0) {
+                            String printer_id = mapList.get(position).get("printer_id");
+                            Intent intent = new Intent(PrinterSeetingActivity.this,PrintAddActivity.class);
+                            intent.putExtra("printer_id",printer_id);
+                            intent.putExtra("printer_no",mapList.get(position).get("printer_no"));
+                            intent.putExtra("printer_name",mapList.get(position).get("printer_name"));
+                            intent.putExtra("type_print",mapList.get(position).get("type_print"));
+                            intent.putExtra("key",mapList.get(position).get("key"));
+                            intent.putExtra("print_num",mapList.get(position).get("print_num"));
+                            intent.putExtra("printer_way",mapList.get(position).get("printer_way"));
+                            intent.putExtra("page_size",mapList.get(position).get("page_size"));
+                            intent.putExtra("ip",mapList.get(position).get("ip"));
+                            intent.putExtra("port",mapList.get(position).get("port"));
+                            intent.putExtra("back_good_if_print",mapList.get(position).get("back_good_if_print"));
+                            intent.putExtra("print_way",mapList.get(position).get("print_way"));
+                            startActivity(intent);
 
 
-                            LayoutInflater factory = LayoutInflater
-                                    .from(PrinterSeetingActivity.this);
-                            final View textEntryView = factory
-                                    .inflate(
-                                            R.layout.jian_food_dialog,
-                                            null);
-                            final EditText textjianshao = textEntryView
-                                    .findViewById(R.id.text_editjiannumbe);
-                            final EditText textjianshao1 = textEntryView
-                                    .findViewById(R.id.text_edit1);
-                            textjianshao.setHint("请输入打印机名称");
-                            textjianshao1.setVisibility(View.VISIBLE);
-                            textjianshao1.setHint("请输入打印份数");
-                            textjianshao.setText(mapList.get(position).get("printer_name"));
-                            textjianshao1.setText(mapList.get(position).get("print_num"));
-                            AlertDialog.Builder ad1 = new AlertDialog.Builder(
-                                    PrinterSeetingActivity.this);
-                            ad1.setTitle("编辑打印机");
-                            ad1.setIcon(R.drawable.ic_launcher);
-                            ad1.setView(textEntryView);
-                            ad1.setPositiveButton(
-                                    "保存",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog,
-                                                int i) {
-                                            String printer_id = mapList.get(position).get("printer_id");
-                                            String priter_name = textjianshao.getText().toString();
-                                            String printer_num = textjianshao1.getText().toString();
-                                            if (priter_name.equals("")) {
-                                                Toast.makeText(PrinterSeetingActivity.this, "请输入打印机名称", Toast.LENGTH_SHORT).show();
-                                            } else if (printer_num.equals("")) {
-                                                Toast.makeText(PrinterSeetingActivity.this, "请输入打印份数", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                updatePrint(printer_id, priter_name, printer_num);
-
-                                            }
-                                        }
-                                    });
-                            ad1.setNegativeButton(
-                                    "关闭",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog,
-                                                int i) {
-
-                                        }
-                                    });
-                            ad1.show();// 显示对话框
+//                            LayoutInflater factory = LayoutInflater
+//                                    .from(PrinterSeetingActivity.this);
+//                            final View textEntryView = factory
+//                                    .inflate(
+//                                            R.layout.jian_food_dialog,
+//                                            null);
+//                            final EditText textjianshao = textEntryView
+//                                    .findViewById(R.id.text_editjiannumbe);
+//                            final EditText textjianshao1 = textEntryView
+//                                    .findViewById(R.id.text_edit1);
+//                            textjianshao.setHint("请输入打印机名称");
+//                            textjianshao1.setVisibility(View.VISIBLE);
+//                            textjianshao1.setHint("请输入打印份数");
+//                            textjianshao.setText(mapList.get(position).get("printer_name"));
+//                            textjianshao1.setText(mapList.get(position).get("print_num"));
+//                            AlertDialog.Builder ad1 = new AlertDialog.Builder(
+//                                    PrinterSeetingActivity.this);
+//                            ad1.setTitle("编辑打印机");
+//                            ad1.setIcon(R.drawable.ic_launcher);
+//                            ad1.setView(textEntryView);
+//                            ad1.setPositiveButton(
+//                                    "保存",
+//                                    new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(
+//                                                DialogInterface dialog,
+//                                                int i) {
+//                                            String printer_id = mapList.get(position).get("printer_id");
+//                                            String priter_name = textjianshao.getText().toString();
+//                                            String printer_num = textjianshao1.getText().toString();
+//                                            if (priter_name.equals("")) {
+//                                                Toast.makeText(PrinterSeetingActivity.this, "请输入打印机名称", Toast.LENGTH_SHORT).show();
+//                                            } else if (printer_num.equals("")) {
+//                                                Toast.makeText(PrinterSeetingActivity.this, "请输入打印份数", Toast.LENGTH_SHORT).show();
+//                                            } else {
+//                                                updatePrint(printer_id, priter_name, printer_num);
+//
+//                                            }
+//                                        }
+//                                    });
+//                            ad1.setNegativeButton(
+//                                    "关闭",
+//                                    new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(
+//                                                DialogInterface dialog,
+//                                                int i) {
+//
+//                                        }
+//                                    });
+//                            ad1.show();// 显示对话框
 
 
                         } else if (index == 1) {
@@ -245,6 +260,12 @@ public class PrinterSeetingActivity extends BaseActivity {
                                 map.put("printer_name", printer_name);
                                 map.put("print_num", object.getString("print_num"));
                                 map.put("printer_id", object.getString("id"));
+                                map.put("type_print",object.getString("type_print"));
+                                map.put("key",object.getString("key"));
+                                map.put("printer_way",object.getString("printer_way"));
+                                map.put("page_size",object.getString("page_size"));
+                                map.put("back_good_if_print",object.getString("back_good_if_print"));
+                                map.put("print_way",object.getString("print_way"));
                                 mapList.add(map);
                             }
                             managePrintAdapter.notifyDataSetChanged();

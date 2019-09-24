@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,19 +23,24 @@ import com.mx.sy.dialog.SweetAlertDialog;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class PrintAddActivity extends BaseActivity {
 
     private LinearLayout ll_back;
     private TextView tv_title;
-    private Button select_persontype;
+    private Button select_persontype,select_return_goods,select_cook_printtype;
     private Button btn_sumbit;
     private AlertDialog alertDialog;
     private EditText et_print_name, et_print_number, et_print_key, et_print_num;
 
     private String printType = "";
+    private String back_good_if_print;
+    private String print_way;
 
     private SharedPreferences preferences;
+
+    private String printer_id = "";
 
     @Override
     public void widgetClick(View v) {
@@ -56,7 +62,7 @@ public class PrintAddActivity extends BaseActivity {
                     Toast.makeText(PrintAddActivity.this, "请输入份数", Toast
                             .LENGTH_SHORT).show();
                 } else if (printType.equals("")) {
-                    Toast.makeText(PrintAddActivity.this, "请选择账号类型", Toast
+                    Toast.makeText(PrintAddActivity.this, "请选择打印类型", Toast
                             .LENGTH_SHORT).show();
                 } else {
                     new SweetAlertDialog(this,
@@ -69,7 +75,12 @@ public class PrintAddActivity extends BaseActivity {
                                     new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sDialog) {
-                                            addPrint();
+                                            if (TextUtils.isEmpty(printer_id)){
+                                                addPrint();
+                                            }else {
+                                                updatePrint();
+                                            }
+
                                         }
                                     })
                             .setCancelClickListener(
@@ -99,6 +110,46 @@ public class PrintAddActivity extends BaseActivity {
                     }
                 });
                 alertDialog = alertBuilder.create();
+                alertDialog.show();
+                break;
+            case R.id.select_return_goods:
+                final String[] items1 = {"是", "否"};
+                AlertDialog.Builder alertBuilder1 = new AlertDialog.Builder(PrintAddActivity.this);
+                alertBuilder1.setTitle("退菜是否打印");
+                alertBuilder1.setItems(items1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int index) {
+                        alertDialog.dismiss();
+                        if (index == 0) {
+                            select_return_goods.setText(items1[index]);
+                            back_good_if_print = "1";
+                        } else if (index == 1) {
+                            select_return_goods.setText(items1[index]);
+                            back_good_if_print = "2";
+                        }
+                    }
+                });
+                alertDialog = alertBuilder1.create();
+                alertDialog.show();
+                break;
+            case R.id.select_cook_printtype:
+                final String[] items2 = {"一菜一打", "一单一打"};
+                AlertDialog.Builder alertBuilder2 = new AlertDialog.Builder(PrintAddActivity.this);
+                alertBuilder2.setTitle("后厨打印方式");
+                alertBuilder2.setItems(items2, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int index) {
+                        alertDialog.dismiss();
+                        if (index == 0) {
+                            select_cook_printtype.setText(items2[index]);
+                            print_way = "1";
+                        } else if (index == 1) {
+                            select_cook_printtype.setText(items2[index]);
+                            print_way = "2";
+                        }
+                    }
+                });
+                alertDialog = alertBuilder2.create();
                 alertDialog.show();
                 break;
             default:
@@ -132,13 +183,48 @@ public class PrintAddActivity extends BaseActivity {
         et_print_number = $(R.id.et_print_number);
         et_print_key = $(R.id.et_print_key);
         et_print_num = $(R.id.et_print_num);
-
-
+        select_return_goods = findViewById(R.id.select_return_goods);
+        select_return_goods.setOnClickListener(this);
+        select_cook_printtype = findViewById(R.id.select_cook_printtype);
+        select_cook_printtype.setOnClickListener(this);
     }
 
     @Override
     protected void initdata() {
-        tv_title.setText("新增员工");
+        if (TextUtils.isEmpty(getIntent().getStringExtra("printer_id"))){
+            tv_title.setText("新增打印机");
+        }else {
+            tv_title.setText("修改打印机");
+            printer_id = getIntent().getStringExtra("printer_id");
+            et_print_name.setText(getIntent().getStringExtra("printer_name"));
+            et_print_number.setText(getIntent().getStringExtra("printer_no"));
+            et_print_key.setText(getIntent().getStringExtra("key"));
+            et_print_num.setText(getIntent().getStringExtra("print_num"));
+
+            if (getIntent().getStringExtra("type_print").equals("1")){
+                select_persontype.setText("后厨");
+                printType = "1";
+            }else {
+                select_persontype.setText("结账");
+                printType = "1";
+            }
+
+            if (getIntent().getStringExtra("back_good_if_print").equals("1")){
+                select_return_goods.setText("是");
+                back_good_if_print = "1";
+            }else {
+                select_return_goods.setText("否");
+                back_good_if_print = "2";
+            }
+
+            if (getIntent().getStringExtra("print_way").equals("1")){
+                select_cook_printtype.setText("一菜一打");
+                print_way = "1";
+            } else {
+                select_cook_printtype.setText("一单一打");
+                print_way = "2";
+            }
+        }
     }
 
     @Override
@@ -167,6 +253,76 @@ public class PrintAddActivity extends BaseActivity {
         params.put("key", et_print_key.getText().toString());
         params.put("print_num", et_print_num.getText().toString());
         params.put("type_print", printType);
+
+        params.put("printer_way","3");
+        params.put("page_size","58");
+        params.put("ip","");
+        params.put("port","");
+        params.put("back_good_if_print",back_good_if_print);
+        params.put("print_way",print_way);
+
+
+        client.post(url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // 修改打印机
+    public void updatePrint() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.PRINTUPDATE;
+        RequestParams params = new RequestParams();
+        params.put("printer_id",printer_id);
+        params.put("printer_name", et_print_name.getText().toString());
+        params.put("printer_no", et_print_number.getText().toString());
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        params.put("key", et_print_key.getText().toString());
+        params.put("print_num", et_print_num.getText().toString());
+        params.put("type_print", printType);
+
+        params.put("printer_way","3");
+        params.put("page_size","58");
+        params.put("ip","");
+        params.put("port","");
+        params.put("back_good_if_print",back_good_if_print);
+        params.put("print_way",print_way);
+
 
         client.post(url, params, new AsyncHttpResponseHandler() {
             @Override

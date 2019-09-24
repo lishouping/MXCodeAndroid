@@ -129,11 +129,14 @@ public class ManageDishesAddActivity extends BaseActivity {
                                                 if (TextUtils.isEmpty(imageUrl)) {
                                                     if (pagetype.equals("2")) {
                                                         updateFood("");
+                                                        showDilog("");
                                                     } else if (pagetype.equals("0")) {
                                                         addFood("");
+                                                        showDilog("");
                                                     }
                                                 } else {
                                                     uploadImage();
+                                                    showDilog("");
                                                 }
 
                                             } catch (FileNotFoundException e) {
@@ -584,6 +587,7 @@ public class ManageDishesAddActivity extends BaseActivity {
                             Toast.makeText(getApplicationContext(), jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
                             finish();
+                            dissmissDilog();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
@@ -597,6 +601,7 @@ public class ManageDishesAddActivity extends BaseActivity {
             public void onFailure(int arg0, Header[] arg1, byte[] arg2,
                                   Throwable arg3) {
                 // TODO Auto-generated method stub
+                dissmissDilog();
                 Toast.makeText(getApplicationContext(), "服务器异常",
                         Toast.LENGTH_SHORT).show();
             }
@@ -719,6 +724,7 @@ public class ManageDishesAddActivity extends BaseActivity {
                             Toast.makeText(getApplicationContext(), jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
                             finish();
+                            dissmissDilog();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
@@ -732,6 +738,7 @@ public class ManageDishesAddActivity extends BaseActivity {
             public void onFailure(int arg0, Header[] arg1, byte[] arg2,
                                   Throwable arg3) {
                 // TODO Auto-generated method stub
+                dissmissDilog();
                 Toast.makeText(getApplicationContext(), "服务器异常",
                         Toast.LENGTH_SHORT).show();
             }

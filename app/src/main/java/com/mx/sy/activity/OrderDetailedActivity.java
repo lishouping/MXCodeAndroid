@@ -441,7 +441,11 @@ public class OrderDetailedActivity extends BaseActivity {
                                         ad1.show();// 显示对话框
                                     }else {
                                         // 赠送菜
+                                        String cart_id = dateList.get(
+                                                position).get("cart_id");
+                                        String goods_id = dateList.get(position).get("good_id");
 
+                                        songGoods(cart_id,goods_id);
                                     }
                                 }
                             });
@@ -573,6 +577,7 @@ public class OrderDetailedActivity extends BaseActivity {
                                         object2.getString("good_total_price"));
                                 map.put("if_up", object2.getString("if_up"));
                                 map.put("ext_size_id", object2.getString("ext_size_id"));
+                                map.put("cart_id",object2.getString("cart_id"));
                                 dateList.add(map);
                             }
                             lv_order_dinner.setAdapter(orderSubmitAdapter);
@@ -847,6 +852,59 @@ public class OrderDetailedActivity extends BaseActivity {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // 赠菜
+    public void songGoods(String cart_id,String goods_id) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.SONGGOODS;
+        RequestParams params = new RequestParams();
+        params.put("goods_id", goods_id);
+        params.put("num", "1");
+        params.put("ext_id", "");
+        params.put("card_id", cart_id);
+        params.put("table_id", table_id);
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            getOrderDeatiledByOrderNum();
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),

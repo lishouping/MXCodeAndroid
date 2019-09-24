@@ -111,6 +111,8 @@
                         android:hint="请输入负责人员电话"
                         android:paddingLeft="5dp"
                         android:singleLine="true"
+                        android:maxLength="11"
+                        android:inputType="number"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color"
                         android:textSize="12sp" />
@@ -313,6 +315,8 @@
                         android:hint="请输入店铺电话"
                         android:paddingLeft="5dp"
                         android:singleLine="true"
+                        android:inputType="number"
+                        android:maxLength="11"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color"
                         android:textSize="12sp" />

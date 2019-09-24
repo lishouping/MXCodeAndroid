@@ -28,6 +28,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
 import com.mx.sy.api.ApiConfig;
+import com.mx.sy.app.MyApplication;
 import com.mx.sy.fragment.MineFragment;
 import com.mx.sy.fragment.OrderFragment;
 import com.mx.sy.fragment.ServiceFragment;
@@ -66,6 +67,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         registerMessageReceiver();
 
         initView();
+
+        getShopTableInfo();
     }
 
     @Override
@@ -104,7 +107,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         tv_title = (TextView) findViewById(R.id.tv_title);
         ll_back.setVisibility(View.INVISIBLE);
-        tv_title.setText(R.string.text_tv_title);
+
 
         fragment = (FrameLayout) findViewById(R.id.fragment);
 
@@ -314,6 +317,53 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
                 Log.i("出错了", arg3 + "");
                 Toast.makeText(getApplicationContext(), "服务器异常",
                         Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 查询店铺信息
+    public void getShopTableInfo() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.GETSHOPINFO + "/"
+                + preferences.getString("shop_id", "");
+        client.get(url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            JSONObject jsonObject2 = new JSONObject(jsonObject.getString("DATA"));
+                            //店铺名称
+                            String shop_name = jsonObject2.getString("shop_name");
+                            tv_title.setText(shop_name);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

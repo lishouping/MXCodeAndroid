@@ -127,6 +127,7 @@ public class ManageShopActivity extends BaseActivity {
                                         //updateShopInfo();
                                         try {
                                             uploadImage();
+                                            showDilog("更新中...");
                                         } catch (FileNotFoundException e) {
                                             e.printStackTrace();
                                         }
@@ -362,13 +363,13 @@ public class ManageShopActivity extends BaseActivity {
 
                             //微信支付图片
                             String wechat_img = jsonObject2.getString("wechat_img");
-                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + wechat_img, img_wx, true);
+                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL+ "heygay" + wechat_img, img_wx, true);
                             //支付宝支付图片
                             String alipay_img = jsonObject2.getString("alipay_img");
-                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + alipay_img, img_alpay, true);
+                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL+ "heygay" + alipay_img, img_alpay, true);
                             // 图标
                             String icon = jsonObject2.getString("icon");
-                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL + icon, img_shop, true);
+                            MyApplication.mLoader.loadImage(ApiConfig.RESOURCE_URL+ "heygay" + icon, img_shop, true);
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),
@@ -589,13 +590,13 @@ public class ManageShopActivity extends BaseActivity {
         params.put("other",et_service.getText().toString());
         params.put("offer",et_recr_info.getText().toString());
         if (!logoFile.equals("")) {
-            params.put("file", logoFile);
+            params.put("icon", logoFile);
         }
         if (!wxFile.equals("")) {
-            params.put("wechat_img_file", wxFile);
+            params.put("wechat_img", wxFile);
         }
         if (!alpayFile.equals("")) {
-            params.put("alipay_img_file", alpayFile);
+            params.put("alipay_img", alpayFile);
         }
         client.post(url, params, new AsyncHttpResponseHandler() {
 
@@ -610,10 +611,12 @@ public class ManageShopActivity extends BaseActivity {
                         String CODE = jsonObject.getString("CODE");
                         if (CODE.equals("1000")) {
                             Toast.makeText(ManageShopActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                            dissmissDilog();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
+                        dissmissDilog();
                         Toast.makeText(getApplicationContext(), "服务器异常",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -624,6 +627,7 @@ public class ManageShopActivity extends BaseActivity {
             public void onFailure(int arg0, Header[] arg1, byte[] arg2,
                                   Throwable arg3) {
                 // TODO Auto-generated method stub
+                dissmissDilog();
                 Toast.makeText(getApplicationContext(), "服务器异常",
                         Toast.LENGTH_LONG).show();
             }

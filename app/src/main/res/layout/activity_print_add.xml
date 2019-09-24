@@ -136,6 +136,7 @@
                         android:layout_marginRight="15dp"
                         android:background="@drawable/shape_login_bg"
                         android:hint="请输入打印份数"
+                        android:inputType="number"
                         android:paddingLeft="5dp"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
@@ -169,6 +170,64 @@
                         android:paddingLeft="5dp"
                         android:singleLine="true"
                         android:text="请选择打印类型"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:text="退菜打印    "
+                        android:textColor="#000"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/select_return_goods"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/shape_login_bg"
+                        android:paddingLeft="5dp"
+                        android:singleLine="true"
+                        android:text="请选择"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color"
+                        android:textSize="12sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:text="打印类型    "
+                        android:textColor="#000"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/select_cook_printtype"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/shape_login_bg"
+                        android:paddingLeft="5dp"
+                        android:singleLine="true"
+                        android:text="后厨打印方式"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color"
                         android:textSize="12sp" />
