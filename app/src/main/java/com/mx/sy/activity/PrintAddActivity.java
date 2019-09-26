@@ -27,7 +27,7 @@ import org.w3c.dom.Text;
 
 public class PrintAddActivity extends BaseActivity {
 
-    private LinearLayout ll_back;
+    private LinearLayout ll_back,ll_update;
     private TextView tv_title;
     private Button select_persontype,select_return_goods,select_cook_printtype;
     private Button btn_sumbit;
@@ -49,48 +49,88 @@ public class PrintAddActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_sumbit:
-                if (et_print_name.getText().toString().equals("")) {
-                    Toast.makeText(PrintAddActivity.this, "打印机名称", Toast
-                            .LENGTH_SHORT).show();
-                } else if (et_print_number.getText().toString().equals("")) {
-                    Toast.makeText(PrintAddActivity.this, "请输入打印机编号", Toast
-                            .LENGTH_SHORT).show();
-                } else if (et_print_key.getText().toString().equals("")) {
-                    Toast.makeText(PrintAddActivity.this, "请输入打印机KEY", Toast
-                            .LENGTH_SHORT).show();
-                } else if (et_print_num.getText().toString().equals("")) {
-                    Toast.makeText(PrintAddActivity.this, "请输入份数", Toast
-                            .LENGTH_SHORT).show();
-                } else if (printType.equals("")) {
-                    Toast.makeText(PrintAddActivity.this, "请选择打印类型", Toast
-                            .LENGTH_SHORT).show();
-                } else {
-                    new SweetAlertDialog(this,
-                            SweetAlertDialog.NORMAL_TYPE)
-                            .setTitleText("确定要提交信息吗？")
-                            .setCancelText("取消")
-                            .setConfirmText("确定")
-                            .showCancelButton(true)
-                            .setConfirmClickListener(
-                                    new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sDialog) {
-                                            if (TextUtils.isEmpty(printer_id)){
-                                                addPrint();
-                                            }else {
-                                                updatePrint();
-                                            }
+                if (tv_title.getText().equals("新增打印机")){
+                    if (et_print_name.getText().toString().equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "打印机名称", Toast
+                                .LENGTH_SHORT).show();
+                    } else if (et_print_number.getText().toString().equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "请输入打印机编号", Toast
+                                .LENGTH_SHORT).show();
+                    } else if (et_print_key.getText().toString().equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "请输入打印机KEY", Toast
+                                .LENGTH_SHORT).show();
+                    } else if (et_print_num.getText().toString().equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "请输入份数", Toast
+                                .LENGTH_SHORT).show();
+                    } else if (printType.equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "请选择打印类型", Toast
+                                .LENGTH_SHORT).show();
+                    } else {
+                        new SweetAlertDialog(this,
+                                SweetAlertDialog.NORMAL_TYPE)
+                                .setTitleText("确定要提交信息吗？")
+                                .setCancelText("取消")
+                                .setConfirmText("确定")
+                                .showCancelButton(true)
+                                .setConfirmClickListener(
+                                        new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sDialog) {
+                                                if (TextUtils.isEmpty(printer_id)){
+                                                    addPrint();
+                                                }else {
+                                                    updatePrint();
+                                                }
 
-                                        }
-                                    })
-                            .setCancelClickListener(
-                                    new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sDialog) {
-                                            sDialog.cancel();
-                                        }
-                                    }).show();
+                                            }
+                                        })
+                                .setCancelClickListener(
+                                        new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sDialog) {
+                                                sDialog.cancel();
+                                            }
+                                        }).show();
+                    }
+                }else {
+                    if (et_print_name.getText().toString().equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "打印机名称", Toast
+                                .LENGTH_SHORT).show();
+                    } else if (et_print_num.getText().toString().equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "请输入份数", Toast
+                                .LENGTH_SHORT).show();
+                    } else if (printType.equals("")) {
+                        Toast.makeText(PrintAddActivity.this, "请选择打印类型", Toast
+                                .LENGTH_SHORT).show();
+                    } else {
+                        new SweetAlertDialog(this,
+                                SweetAlertDialog.NORMAL_TYPE)
+                                .setTitleText("确定要提交信息吗？")
+                                .setCancelText("取消")
+                                .setConfirmText("确定")
+                                .showCancelButton(true)
+                                .setConfirmClickListener(
+                                        new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sDialog) {
+                                                if (TextUtils.isEmpty(printer_id)){
+                                                    addPrint();
+                                                }else {
+                                                    updatePrint();
+                                                }
+
+                                            }
+                                        })
+                                .setCancelClickListener(
+                                        new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sDialog) {
+                                                sDialog.cancel();
+                                            }
+                                        }).show();
+                    }
                 }
+
                 break;
             case R.id.select_persontype:
                 final String[] items = {"后厨", "结账"};
@@ -187,6 +227,7 @@ public class PrintAddActivity extends BaseActivity {
         select_return_goods.setOnClickListener(this);
         select_cook_printtype = findViewById(R.id.select_cook_printtype);
         select_cook_printtype.setOnClickListener(this);
+        ll_update = findViewById(R.id.ll_update);
     }
 
     @Override
@@ -194,6 +235,7 @@ public class PrintAddActivity extends BaseActivity {
         if (TextUtils.isEmpty(getIntent().getStringExtra("printer_id"))){
             tv_title.setText("新增打印机");
         }else {
+            ll_update.setVisibility(View.GONE);
             tv_title.setText("修改打印机");
             printer_id = getIntent().getStringExtra("printer_id");
             et_print_name.setText(getIntent().getStringExtra("printer_name"));

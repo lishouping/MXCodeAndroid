@@ -142,7 +142,7 @@ public class ApiConfig {
 	// 桌台统计列表(分页)
 	public static String GETTABLESST = "/statics/getTableStatics";
 	// 菜品销量排行
-	public static String GETFOODSSTATICS = "/statics/getGoodsSales";
+	public static String GETFOODSSTATICS = "/statics/getGoodsSalesCount";
 	// 结账方式统计
 	public static String GETCHECKSTATICS = "/statics/getCheckStatics";
 	// 服务员统计

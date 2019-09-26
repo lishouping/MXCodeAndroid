@@ -1,8 +1,10 @@
 package com.mx.sy.utils;
 
+import android.util.Log;
+
 import java.security.MessageDigest;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * <p>
@@ -53,4 +55,10 @@ public class CommonUtils {
         timeString = sdf.format(new Date(l));//单位秒
         return timeString;
     }
+
+	public static String getTime(Date date) {//可根据需要自行截取数据显示
+		Log.d("getTime()", "choice date millis: " + date.getTime());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return format.format(date);
+	}
 }
