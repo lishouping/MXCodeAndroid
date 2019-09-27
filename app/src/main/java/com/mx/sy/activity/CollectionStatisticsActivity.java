@@ -91,7 +91,14 @@ public class CollectionStatisticsActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "结束时间不能为空",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    getStatic();
+                    if (myList.size()>0){
+                        myList.clear();
+                        myAdapter.notifyDataSetChanged();
+                        page = 1;
+                        getStatic();
+                    }else {
+                        getStatic();
+                    }
                 }
                 break;
             case R.id.btn_start_time:
