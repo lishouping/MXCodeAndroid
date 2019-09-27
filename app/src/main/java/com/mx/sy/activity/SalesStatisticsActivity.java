@@ -135,7 +135,13 @@ public class SalesStatisticsActivity extends BaseActivity {
 						Toast.LENGTH_SHORT).show();
 			} else {
 				time_flag = "-1";// 如果timeflag为-1时按照时间进行查询
-				selectgoodstatic();
+				if (myList.size()>0){
+					myList.clear();
+					myAdapter.notifyDataSetChanged();
+					page = 1;
+				}else {
+					selectgoodstatic();
+				}
 				selectshopgoodstatic();
 			}
 			break;

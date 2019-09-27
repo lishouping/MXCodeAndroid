@@ -2,6 +2,7 @@ package com.mx.sy.activity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +27,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -34,6 +38,7 @@ import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
 import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseActivity;
+import com.mx.sy.utils.CommonUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -90,17 +95,40 @@ public class ServiceStatisticsActivity extends BaseActivity {
 				Toast.makeText(getApplicationContext(), "结束时间不能为空",
 						Toast.LENGTH_SHORT).show();
 			} else {
-				getServiceStatics();
+				if (myList.size()>0){
+					myList.clear();
+					myAdapter.notifyDataSetChanged();
+					page = 1;
+					getServiceStatics();
+				}else {
+					getServiceStatics();
+				}
 			}
 			break;
             case R.id.ll_back:
                 finish();
                 break;
 		case R.id.btn_start_time:
-			onCreateDialog(DATE_DIALOG).show();
+			//时间选择器
+			TimePickerView pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+				@Override
+				public void onTimeSelect(Date date, View v) {
+					start_time = CommonUtils.getTime(date);
+					btn_start_time.setText(start_time);
+				}
+			}).setType(new boolean[]{true, true, true, true, true, false}).build();
+			pvTime.show();
 			break;
 		case R.id.btn_end_time:
-			onCreateDialog(TIME_DIALOG).show();
+			//时间选择器
+			TimePickerView pvTime1 = new TimePickerBuilder(this, new OnTimeSelectListener() {
+				@Override
+				public void onTimeSelect(Date date, View v) {
+					end_time = CommonUtils.getTime(date);
+					btn_end_time.setText(start_time);
+				}
+			}).setType(new boolean[]{true, true, true, true, true, false}).build();
+			pvTime1.show();
 			break;
 		}
 	}
@@ -190,7 +218,6 @@ public class ServiceStatisticsActivity extends BaseActivity {
 	@Override
 	public void doBusiness(Context mContext) {
 		// TODO Auto-generated method stub
-		getServiceStatics();
 	}
 
 	// 服务数量统计
@@ -264,46 +291,6 @@ public class ServiceStatisticsActivity extends BaseActivity {
 		});
 	}
 
-	/**
-	 * 创建日期及时间选择对话框
-	 */
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog = null;
-		switch (id) {
-		case DATE_DIALOG:
-			c = Calendar.getInstance();
-			dialog = new DatePickerDialog(this,
-					new DatePickerDialog.OnDateSetListener() {
-						public void onDateSet(DatePicker dp, int year,
-								int month, int dayOfMonth) {
-							int man = month + 1;
-							start_time = year + "-" + man + "-" + dayOfMonth;
-							btn_start_time.setText(start_time);
-						}
-					}, c.get(Calendar.YEAR), // 传入年份
-					c.get(Calendar.MONTH), // 传入月份
-					c.get(Calendar.DAY_OF_MONTH) // 传入天数
-			);
-			break;
-		case TIME_DIALOG:
-			c = Calendar.getInstance();
-			dialog = new DatePickerDialog(this,
-					new DatePickerDialog.OnDateSetListener() {
-						public void onDateSet(DatePicker dp, int year,
-								int month, int dayOfMonth) {
-							int man = month + 1;
-							end_time = year + "-" + man + "-" + dayOfMonth;
-							btn_end_time.setText(end_time);
-						}
-					}, c.get(Calendar.YEAR), // 传入年份
-					c.get(Calendar.MONTH), // 传入月份
-					c.get(Calendar.DAY_OF_MONTH) // 传入天数
-			);
-			break;
-		}
-		return dialog;
-	}
 
 	public class MyAdapter extends BaseQuickAdapter<HashMap<String,String>,BaseViewHolder> {
 
