@@ -61,7 +61,7 @@ public class OrderDetailedActivity extends BaseActivity {
 
     // 用餐中
     private Button btn_addfood_order;// 添加菜品
-    private Button btn_agine_addfood;
+    private Button btn_agine_addfood,btn_order_print;
     private Button btn_jiezhang_order;// 结账
 
     // 已完成
@@ -140,6 +140,7 @@ public class OrderDetailedActivity extends BaseActivity {
         } else if (detailedpage.equals("2")) {// 正在用餐
             btn_addfood_order = $(R.id.btn_addfood_order);
             btn_agine_addfood = $(R.id.btn_agine_addfood);
+            btn_order_print = $(R.id.btn_order_print);
             btn_jiezhang_order = $(R.id.btn_jiezhang_order);
         } else if (detailedpage.equals("3")) {// 已完成
             btn_dayin_order = $(R.id.btn_dayin_order);
@@ -293,8 +294,12 @@ public class OrderDetailedActivity extends BaseActivity {
                                 }).show();
                 break;
             case R.id.btn_agine_addfood:
-                //重新下单
+
                 Toast.makeText(this,"重新下单",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_order_print:
+                //打印
+                printOrder();
                 break;
             default:
                 break;
@@ -376,7 +381,7 @@ public class OrderDetailedActivity extends BaseActivity {
                     builder.setIcon(R.drawable.ic_launcher);
                     builder.setTitle("选择一个操作");
                     // 指定下拉列表的显示数据
-                    final String[] cities = {"划菜", "退菜","赠菜"};
+                    final String[] cities = {"划菜", "退菜"};
                     // 设置一个下拉的列表选择项
                     builder.setItems(cities,
                             new DialogInterface.OnClickListener() {
@@ -439,13 +444,6 @@ public class OrderDetailedActivity extends BaseActivity {
                                                     }
                                                 });
                                         ad1.show();// 显示对话框
-                                    }else {
-                                        // 赠送菜
-                                        String cart_id = dateList.get(
-                                                position).get("cart_id");
-                                        String goods_id = dateList.get(position).get("good_id");
-
-                                        songGoods(cart_id,goods_id);
                                     }
                                 }
                             });
@@ -470,6 +468,7 @@ public class OrderDetailedActivity extends BaseActivity {
             btn_addfood_order.setOnClickListener(this);
             btn_jiezhang_order.setOnClickListener(this);
             btn_agine_addfood.setOnClickListener(this);
+            btn_order_print.setOnClickListener(this);
         } else if (detailedpage.equals("3")) {// 已完成
             btn_dayin_order.setOnClickListener(this);
         }
@@ -876,58 +875,7 @@ public class OrderDetailedActivity extends BaseActivity {
         });
     }
 
-    // 赠菜
-    public void songGoods(String cart_id,String goods_id) {
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("key", preferences.getString("loginkey", ""));
-        client.addHeader("id", preferences.getString("userid", ""));
-        String url = ApiConfig.API_URL + ApiConfig.SONGGOODS;
-        RequestParams params = new RequestParams();
-        params.put("goods_id", goods_id);
-        params.put("num", "1");
-        params.put("ext_id", "");
-        params.put("card_id", cart_id);
-        params.put("table_id", table_id);
-        client.post(url, params, new AsyncHttpResponseHandler() {
 
-            @Override
-            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-                // TODO Auto-generated method stub
-                if (arg0 == 200) {
-                    try {
-                        String response = new String(arg2, "UTF-8");
-                        com.orhanobut.logger.Logger.d(response);
-                        JSONObject jsonObject = new JSONObject(response);
-
-                        String CODE = jsonObject.getString("CODE");
-                        if (CODE.equals("1000")) {
-                            Toast.makeText(getApplicationContext(),
-                                    jsonObject.getString("MESSAGE"),
-                                    Toast.LENGTH_SHORT).show();
-                            getOrderDeatiledByOrderNum();
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    jsonObject.getString("MESSAGE"),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "服务器异常",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-                                  Throwable arg3) {
-                // TODO Auto-generated method stub
-                Toast.makeText(getApplicationContext(), "服务器异常",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
     // 减菜
     public void removeGoods(String order_num, String goods_id, String num) {
@@ -1027,6 +975,55 @@ public class OrderDetailedActivity extends BaseActivity {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "服务器异常",
                                 Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // 重新下单 打印
+    public void printOrder() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.ORDERPRINT;
+        RequestParams params = new RequestParams();
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        params.put("order_id", order_id);
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                        dissmissDilog();
                     }
                 }
             }

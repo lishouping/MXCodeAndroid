@@ -243,6 +243,15 @@
                 android:text="重新下单"
                 android:textColor="@color/button_text_color"
                 android:textSize="13sp" />
+            <Button
+                android:id="@+id/btn_order_print"
+                android:layout_width="0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_blule_btnbg"
+                android:text="打印订单"
+                android:textColor="@color/button_text_color"
+                android:textSize="13sp" />
             <View
                 android:layout_width="10dp"
                 android:layout_height="fill_parent" />

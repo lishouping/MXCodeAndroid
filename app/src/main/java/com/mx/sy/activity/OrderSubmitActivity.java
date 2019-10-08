@@ -201,40 +201,115 @@ public class OrderSubmitActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					final int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				LayoutInflater factory = LayoutInflater
-						.from(OrderSubmitActivity.this);
-				final View textEntryView = factory.inflate(
-						R.layout.create_user_dialog, null);
-				final EditText editTextName = (EditText) textEntryView
-						.findViewById(R.id.text_editprice);
-				// final EditText editTextNumEditText =
-				// (EditText)textEntryView.findViewById(R.id.editTextNum);
-				AlertDialog.Builder ad1 = new AlertDialog.Builder(
+				AlertDialog.Builder builder = new AlertDialog.Builder(
 						OrderSubmitActivity.this);
-				ad1.setTitle("时价菜品");
-				ad1.setIcon(android.R.drawable.ic_dialog_info);
-				ad1.setView(textEntryView);
-				ad1.setPositiveButton("保存",
+				builder.setIcon(R.drawable.ic_launcher);
+				builder.setTitle("选择一个操作");
+				// 指定下拉列表的显示数据
+				final String[] cities = {"时价菜品","赠菜"};
+				// 设置一个下拉的列表选择项
+				builder.setItems(cities,
 						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int i) {
-								String cart_goods_id = dateList.get(arg2).get(
-										"cart_good_id");
-								String price = editTextName.getText()
-										.toString();
-								updateGoodsPrice(cart_goods_id, price);
+							@Override
+							public void onClick(DialogInterface dialog,
+												int which) {
+								if (which == 0) {
+									LayoutInflater factory = LayoutInflater
+											.from(OrderSubmitActivity.this);
+									final View textEntryView = factory.inflate(
+											R.layout.create_user_dialog, null);
+									final EditText editTextName = (EditText) textEntryView
+											.findViewById(R.id.text_editprice);
+									// final EditText editTextNumEditText =
+									// (EditText)textEntryView.findViewById(R.id.editTextNum);
+									AlertDialog.Builder ad1 = new AlertDialog.Builder(
+											OrderSubmitActivity.this);
+									ad1.setTitle("时价菜品");
+									ad1.setIcon(android.R.drawable.ic_dialog_info);
+									ad1.setView(textEntryView);
+									ad1.setPositiveButton("保存",
+											new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog, int i) {
+													String cart_goods_id = dateList.get(arg2).get(
+															"cart_good_id");
+													String price = editTextName.getText()
+															.toString();
+													updateGoodsPrice(cart_goods_id, price);
+												}
+											});
+									ad1.setNegativeButton("关闭",
+											new DialogInterface.OnClickListener() {
+												public void onClick(DialogInterface dialog, int i) {
+
+												}
+											});
+									ad1.show();// 显示对话框
+								} else if (which==1){
+									// 赠送菜
+									String goods_id = dateList.get(arg2).get("good_id");
+									songGoods(cart_id,goods_id);
+								}
 							}
 						});
-				ad1.setNegativeButton("关闭",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int i) {
-
-							}
-						});
-				ad1.show();// 显示对话框
-
+				builder.show();
 			}
 		});
 
+	}
+
+
+
+	// 赠菜
+	public void songGoods(String cart_id,String goods_id) {
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.addHeader("key", preferences.getString("loginkey", ""));
+		client.addHeader("id", preferences.getString("userid", ""));
+		String url = ApiConfig.API_URL + ApiConfig.SONGGOODS;
+		RequestParams params = new RequestParams();
+		params.put("goods_id", goods_id);
+		params.put("num", "1");
+		params.put("ext_id", "");
+		params.put("card_id", cart_id);
+		params.put("table_id", table_id);
+		client.post(url, params, new AsyncHttpResponseHandler() {
+
+			@Override
+			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+				// TODO Auto-generated method stub
+				if (arg0 == 200) {
+					try {
+						String response = new String(arg2, "UTF-8");
+						com.orhanobut.logger.Logger.d(response);
+						JSONObject jsonObject = new JSONObject(response);
+
+						String CODE = jsonObject.getString("CODE");
+						if (CODE.equals("1000")) {
+							Toast.makeText(getApplicationContext(),
+									jsonObject.getString("MESSAGE"),
+									Toast.LENGTH_SHORT).show();
+							getCart();
+						} else {
+							Toast.makeText(getApplicationContext(),
+									jsonObject.getString("MESSAGE"),
+									Toast.LENGTH_SHORT).show();
+						}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						Toast.makeText(getApplicationContext(), "服务器异常",
+								Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+								  Throwable arg3) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getApplicationContext(), "服务器异常",
+						Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 	@Override
@@ -382,7 +457,6 @@ public class OrderSubmitActivity extends BaseActivity {
 								map.put("good_id", object2.getString("good_id"));
 								map.put("pre_price",
 										object2.getString("pre_price"));
-								map.put("good_id", object2.getString("good_id"));
 								map.put("good_name",
 										object2.getString("good_name"));
 								map.put("good_price",

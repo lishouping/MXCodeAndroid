@@ -157,5 +157,14 @@ public class ApiConfig {
 	public static String UPLOADIMAGE = "/upload/uploadShopImage";
 	// 菜品图片上传
 	public static String UPLOADCAIPINIMAGE = "/upload/updateImagesReturnUrl";
-
+	// 打印订单
+	public static String ORDERPRINT = "/order/print";
+	// 查询是否是会员
+	public static String FINDONEBYPHONE ="/user/customer/findOneByUserPhone";
+	// 根据日期段查询会员充值金额
+	public static String SUMBYDATE = "/statistics/getSumRechargeByDate";
+	// 根据日期查询会员新开数量
+	public static String GETUSERCOUNT = "/statistics/getUserCountByDate";
+	// 根据日期查询会员新开数量图表
+	public static String GETUSERCHARTS = "/statistics/getUserChartsByDate";
 }

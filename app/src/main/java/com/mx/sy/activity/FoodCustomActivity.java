@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.IInterface;
 import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -411,6 +412,25 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 		}
 	}
 
+	/**
+	 * 查询菜品名
+	 */
+	private void getDisheName(String content){
+		if (disNameList.size() > 0){
+			for (int i = 0; i < disNameList.size(); i++) {
+
+				if (content.contains(disNameList.get(i).get("goods_name"))){
+					HashMap<String, String> map = disNameList.get(i);
+					disNameList.clear();
+					disNameList.add(map);
+					dishesNameAdapter.notifyDataSetChanged();
+				}
+
+			}
+		}
+
+	}
+
 	// 查询购物车/cart/getCart
 	public void getCart() {
 		shopcarList.clear();
@@ -687,7 +707,15 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 		@Override
 		public void afterTextChanged(Editable s) {
 			String money = edit_search_food.getText().toString();
-			Log.d("------",money);
+			if (TextUtils.isEmpty(money)){
+				disclassList.clear();
+				disNameList.clear();
+				dishesClassAdapter.notifyDataSetChanged();
+				dishesClassAdapter.notifyDataSetChanged();
+				selectCategory();
+			}else {
+				getDisheName(money);
+			}
 		}
 	};
 

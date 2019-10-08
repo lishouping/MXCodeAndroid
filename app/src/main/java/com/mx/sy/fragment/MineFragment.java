@@ -21,6 +21,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
 import com.mx.sy.activity.AboutUsActivity;
 import com.mx.sy.activity.CollectionStatisticsActivity;
@@ -39,10 +42,14 @@ import com.mx.sy.activity.ServiceStatisticsActivity;
 import com.mx.sy.activity.TableStatisticsActivity;
 import com.mx.sy.activity.UserInfoActivity;
 import com.mx.sy.adapter.MineUserAdapter;
+import com.mx.sy.api.ApiConfig;
 import com.mx.sy.base.BaseFragment;
 import com.mx.sy.common.RoundedImageView;
 import com.mx.sy.dialog.SweetAlertDialog;
 import com.mx.sy.push.SettingActivity;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class MineFragment extends BaseFragment {
     private ListView lv_mine_user;
@@ -292,18 +299,16 @@ public class MineFragment extends BaseFragment {
                                         public void onClick(
                                                 DialogInterface dialog,
                                                 int i) {
-                                            Toast.makeText(getActivity(), "是会员", Toast.LENGTH_SHORT).show();
-//                                                        .show();
-//                                            String number = textjianshao
-//                                                    .getText()
-//                                                    .toString();
-//                                            if (number.equals("")) {
-//                                                Toast.makeText(ManageTablePartitionActivity.this, "请填写分区名", Toast.LENGTH_SHORT)
-//                                                        .show();
-//                                            }else {
-//
-//
-//                                            }
+                                            String number = textjianshao
+                                                    .getText()
+                                                    .toString();
+                                            if (number.equals("")) {
+                                                Toast.makeText(getActivity(), "请填会员手机号", Toast.LENGTH_SHORT)
+                                                        .show();
+                                            }else {
+                                                search(number);
+
+                                            }
                                         }
                                     });
                             ad1.setNegativeButton(
@@ -491,5 +496,52 @@ public class MineFragment extends BaseFragment {
         }
 
     }
+    // 会员查询
+    public void search(String phone) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.FINDONEBYPHONE;
+        RequestParams params = new RequestParams();
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        params.put("userPhone", phone);
+        client.post(url, params, new AsyncHttpResponseHandler() {
 
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getActivity(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getActivity(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
