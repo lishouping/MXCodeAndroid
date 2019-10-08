@@ -501,9 +501,9 @@ public class MineFragment extends BaseFragment {
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("key", preferences.getString("loginkey", ""));
         client.addHeader("id", preferences.getString("userid", ""));
-        String url = ApiConfig.API_URL + ApiConfig.FINDONEBYPHONE;
+        String url = ApiConfig.API_URL_MEMBER + ApiConfig.FINDONEBYPHONE;
         RequestParams params = new RequestParams();
-        params.put("shop_id", preferences.getString("shop_id", ""));
+        params.put("shopId", preferences.getString("menmbers_shop_id", ""));
         params.put("userPhone", phone);
         client.post(url, params, new AsyncHttpResponseHandler() {
 
@@ -515,14 +515,14 @@ public class MineFragment extends BaseFragment {
                         String response = new String(arg2, "UTF-8");
                         com.orhanobut.logger.Logger.d(response);
                         JSONObject jsonObject = new JSONObject(response);
-                        String CODE = jsonObject.getString("CODE");
-                        if (CODE.equals("1000")) {
+                        String CODE = jsonObject.getString("code");
+                        if (CODE.equals("0")) {
                             Toast.makeText(getActivity(),
-                                    jsonObject.getString("MESSAGE"),
+                                    jsonObject.getString("msg"),
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity(),
-                                    jsonObject.getString("MESSAGE"),
+                                    jsonObject.getString("msg"),
                                     Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {

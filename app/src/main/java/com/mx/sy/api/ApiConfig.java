@@ -3,7 +3,9 @@ package com.mx.sy.api;
 //定义API 接口等调用
 public class ApiConfig {
 
-	public static String API_URL = "http://47.92.66.33:8080/heygay";
+	public static String API_URL = "http://47.92.66.33/heygay";
+
+	public static String API_URL_MEMBER = "http://47.92.208.3:8090";
 
 	public static String RESOURCE_URL = "http://www.heyguy.cn/images/";
 

@@ -343,6 +343,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
                             JSONObject jsonObject2 = new JSONObject(jsonObject.getString("DATA"));
                             //店铺名称
                             String shop_name = jsonObject2.getString("shop_name");
+                            String menmbers_shop_id = jsonObject2.getString("menmbers_shop_id");
+                            preferences.edit().putString("menmbers_shop_id", menmbers_shop_id)
+                                    .commit();
                             tv_title.setText(shop_name);
                         } else {
                             Toast.makeText(getApplicationContext(),
