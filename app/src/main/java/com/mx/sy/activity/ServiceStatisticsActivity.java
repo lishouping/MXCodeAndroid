@@ -83,6 +83,8 @@ public class ServiceStatisticsActivity extends BaseActivity {
 
 	RefreshLayout mPullToRefreshView;
 
+	View view_nodate;
+
 	@Override
 	public void widgetClick(View v) {
 		// TODO Auto-generated method stub
@@ -155,6 +157,7 @@ public class ServiceStatisticsActivity extends BaseActivity {
 	@Override
 	public void initView(View view) {
 		// TODO Auto-generated method stub
+		view_nodate = findViewById(R.id.view_nodate);
 		ll_back = $(R.id.ll_back);
 		tv_title = $(R.id.tv_title);
 		iv_icon = $(R.id.iv_icon);
@@ -249,10 +252,11 @@ public class ServiceStatisticsActivity extends BaseActivity {
 							JSONArray jsonArray = new JSONArray(jsonObject1
 									.getString("list"));
 							if (jsonArray.length()==0){
-								Toast.makeText(getApplicationContext(),
-										"暂无数据",
-										Toast.LENGTH_SHORT).show();
+								view_nodate.setVisibility(View.VISIBLE);
+								rv_static.setVisibility(View.GONE);
 							}else {
+								view_nodate.setVisibility(View.GONE);
+								rv_static.setVisibility(View.VISIBLE);
 								for (int i = 0; i < jsonArray.length(); i++) {
 
 									JSONObject object = jsonArray.getJSONObject(i);
@@ -267,6 +271,8 @@ public class ServiceStatisticsActivity extends BaseActivity {
 								myAdapter.notifyDataSetChanged();
 							}
 						} else {
+							view_nodate.setVisibility(View.GONE);
+							rv_static.setVisibility(View.VISIBLE);
 							Toast.makeText(getApplicationContext(),
 									jsonObject.getString("MESSAGE"),
 									Toast.LENGTH_SHORT).show();
@@ -274,6 +280,8 @@ public class ServiceStatisticsActivity extends BaseActivity {
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						view_nodate.setVisibility(View.GONE);
+						rv_static.setVisibility(View.VISIBLE);
 						Toast.makeText(getApplicationContext(), "服务器异常",
 								Toast.LENGTH_SHORT).show();
 						dissmissDilog();

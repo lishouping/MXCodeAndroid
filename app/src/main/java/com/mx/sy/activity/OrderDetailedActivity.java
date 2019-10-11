@@ -294,8 +294,7 @@ public class OrderDetailedActivity extends BaseActivity {
                                 }).show();
                 break;
             case R.id.btn_agine_addfood:
-
-                Toast.makeText(this,"重新下单",Toast.LENGTH_SHORT).show();
+                rePrintOrder();
                 break;
             case R.id.btn_order_print:
                 //打印
@@ -1013,6 +1012,56 @@ public class OrderDetailedActivity extends BaseActivity {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                        dissmissDilog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // 重新下单
+    public void rePrintOrder() {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.ORDERPRINT;
+        RequestParams params = new RequestParams();
+        params.put("order_id", order_id);
+        client.post(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),

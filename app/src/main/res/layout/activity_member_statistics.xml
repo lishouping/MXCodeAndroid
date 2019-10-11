@@ -2,17 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
     <include layout="@layout/common_title" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -21,7 +23,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_edit_bg"
                 android:gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_start_time"
@@ -47,7 +49,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_edit_bg"
                 android:gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/btn_end_time"
                     android:layout_width="0dp"
@@ -68,6 +71,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/lin_shop_static"
         android:layout_width="fill_parent"
@@ -77,8 +81,7 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/shape_static_bg"
         android:gravity="center"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -134,9 +137,16 @@
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
+
+    <include
+        android:id="@+id/view_nodate"
+        layout="@layout/view_nodata"
+        android:visibility="visible" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_member_statics"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="16dp"
-        android:layout_height="match_parent"/>
+        android:visibility="gone" />
 </LinearLayout>

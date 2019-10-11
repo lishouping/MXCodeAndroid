@@ -60,6 +60,8 @@ public class OrderFragment extends BaseFragment implements OnClickListener {
 
     int totalnum;
 
+    private View view_nodate;
+
 
     @Override
     protected int setLayoutResouceId() {
@@ -128,6 +130,8 @@ public class OrderFragment extends BaseFragment implements OnClickListener {
         viw_order_nomanage = findViewById(R.id.viw_order_nomanage);
         viw_order_manageing = findViewById(R.id.viw_order_manageing);
         viw_order_managend = findViewById(R.id.viw_order_managend);
+
+        view_nodate = findViewById(R.id.view_nodate);
     }
 
     @Override
@@ -361,10 +365,16 @@ public class OrderFragment extends BaseFragment implements OnClickListener {
                                 orderAdapter.notifyDataSetChanged();
                             }
                             if (dateList.size() == 0) {
-                                Toast.makeText(getActivity(), "暂无数据", Toast.LENGTH_SHORT).show();
+                                view_nodate.setVisibility(View.VISIBLE);
+                                lv_order.setVisibility(View.GONE);
+                            }else {
+                                view_nodate.setVisibility(View.GONE);
+                                lv_order.setVisibility(View.VISIBLE);
                             }
                             dissmissDilog();
                         } else {
+                            view_nodate.setVisibility(View.VISIBLE);
+                            lv_order.setVisibility(View.GONE);
                             Toast.makeText(getActivity(),
                                     jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
@@ -373,6 +383,10 @@ public class OrderFragment extends BaseFragment implements OnClickListener {
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
+
+                        view_nodate.setVisibility(View.VISIBLE);
+                        lv_order.setVisibility(View.GONE);
+
                         Toast.makeText(getActivity(), "服务器异常",
                                 Toast.LENGTH_SHORT).show();
                         dissmissDilog();

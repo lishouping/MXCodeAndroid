@@ -95,6 +95,8 @@ public class SalesStatisticsActivity extends BaseActivity {
 
 	RefreshLayout mPullToRefreshView;
 
+	private View view_nodate;
+
 	@Override
 	public void widgetClick(View v) {
 		// TODO Auto-generated method stub
@@ -219,6 +221,8 @@ public class SalesStatisticsActivity extends BaseActivity {
 		btn_end_time = $(R.id.btn_end_time);
 
 		mPullToRefreshView = findViewById(R.id.pullrefresh_table);
+
+		view_nodate = findViewById(R.id.view_nodate);
 	}
 
 	@Override
@@ -305,8 +309,6 @@ public class SalesStatisticsActivity extends BaseActivity {
 	@Override
 	public void doBusiness(Context mContext) {
 		// TODO Auto-generated method stub
-		selectgoodstatic();
-		selectshopgoodstatic();
 	}
 
 	// 获取菜品销量统计
@@ -332,6 +334,7 @@ public class SalesStatisticsActivity extends BaseActivity {
 						JSONObject jsonObject = new JSONObject(response);
 						String CODE = jsonObject.getString("CODE");
 						if (CODE.equals("1000")) {
+
 							dissmissDilog();
 							JSONObject jsonObject1 = new JSONObject(jsonObject.getString("DATA"));
 							totalnum = Integer.parseInt(jsonObject1.getString("totalnum"));
@@ -339,10 +342,11 @@ public class SalesStatisticsActivity extends BaseActivity {
 							JSONArray jsonArray = new JSONArray(jsonObject1
 									.getString("list"));
 							if (jsonArray.length()==0){
-								Toast.makeText(getApplicationContext(),
-										"暂无数据",
-										Toast.LENGTH_SHORT).show();
+								view_nodate.setVisibility(View.VISIBLE);
+								lv_food_static.setVisibility(View.GONE);
 							}else {
+								view_nodate.setVisibility(View.GONE);
+								lv_food_static.setVisibility(View.VISIBLE);
 								for (int i = 0; i < jsonArray.length(); i++) {
 
 									JSONObject object = jsonArray.getJSONObject(i);
@@ -361,6 +365,8 @@ public class SalesStatisticsActivity extends BaseActivity {
 							}
 
 						} else {
+							view_nodate.setVisibility(View.VISIBLE);
+							lv_food_static.setVisibility(View.GONE);
 							Toast.makeText(getApplicationContext(),
 									jsonObject.getString("MESSAGE"),
 									Toast.LENGTH_SHORT).show();
@@ -368,6 +374,8 @@ public class SalesStatisticsActivity extends BaseActivity {
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						view_nodate.setVisibility(View.VISIBLE);
+						lv_food_static.setVisibility(View.GONE);
 						Toast.makeText(getApplicationContext(), "服务器异常",
 								Toast.LENGTH_SHORT).show();
 						dissmissDilog();

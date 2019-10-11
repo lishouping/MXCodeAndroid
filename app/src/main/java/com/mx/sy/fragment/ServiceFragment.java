@@ -50,6 +50,8 @@ public class ServiceFragment extends BaseFragment implements OnClickListener {
 
     int totalnum;
 
+    View view_nodate;
+
     @Override
     protected int setLayoutResouceId() {
         // TODO Auto-generated method stub
@@ -100,6 +102,8 @@ public class ServiceFragment extends BaseFragment implements OnClickListener {
     protected void initView() {
         // TODO Auto-generated method stub
         super.initView();
+
+        view_nodate = findViewById(R.id.view_nodate);
         lin_nomanage = findViewById(R.id.lin_nomanage);
         lin_nomanage.setOnClickListener(this);
         lin_processed = findViewById(R.id.lin_processed);
@@ -239,45 +243,55 @@ public class ServiceFragment extends BaseFragment implements OnClickListener {
                                     .getString("totalnum"));
                             JSONArray jsonArray = new JSONArray(jsonObject
                                     .getString("DATA"));
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                String service_id = object
-                                        .getString("service_id");
-                                String service_content = object
-                                        .getString("service_content");
-                                String status = object.getString("status");
-                                String create_time = object.getString("create_time");
-                                String receive_time = "";
-                                JSONObject waiterobj = null;
-                                String name = "";
-                                if (servicestate == 1) {
-                                    receive_time = object.getString("receive_time");
-                                    waiterobj = new JSONObject(object.getString("waiter"));
-                                    name = waiterobj.getString("name");
+                            if (jsonArray.length()==0){
+                                view_nodate.setVisibility(View.VISIBLE);
+                                lv_service.setVisibility(View.GONE);
+                            }else {
+                                view_nodate.setVisibility(View.GONE);
+                                lv_service.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    String service_id = object
+                                            .getString("service_id");
+                                    String service_content = object
+                                            .getString("service_content");
+                                    String status = object.getString("status");
+                                    String create_time = object.getString("create_time");
+                                    String receive_time = "";
+                                    JSONObject waiterobj = null;
+                                    String name = "";
+                                    if (servicestate == 1) {
+                                        receive_time = object.getString("receive_time");
+                                        waiterobj = new JSONObject(object.getString("waiter"));
+                                        name = waiterobj.getString("name");
+                                    }
+                                    JSONObject tableobj = new JSONObject(object.getString("table"));
+                                    String table_name = tableobj.getString("table_name");
+                                    HashMap<String, String> map = new HashMap<String, String>();
+                                    if (servicestate == Integer.parseInt(status)) {
+                                        map.put("service_id", service_id);
+                                        map.put("service_content", service_content);
+                                        map.put("status", status);
+                                        map.put("create_time", create_time);
+                                        map.put("receive_time", receive_time);
+                                        map.put("table_name", table_name);
+                                        map.put("name", name);
+                                        dateList.add(map);
+                                    }
                                 }
-                                JSONObject tableobj = new JSONObject(object.getString("table"));
-                                String table_name = tableobj.getString("table_name");
-                                HashMap<String, String> map = new HashMap<String, String>();
-                                if (servicestate == Integer.parseInt(status)) {
-                                    map.put("service_id", service_id);
-                                    map.put("service_content", service_content);
-                                    map.put("status", status);
-                                    map.put("create_time", create_time);
-                                    map.put("receive_time", receive_time);
-                                    map.put("table_name", table_name);
-                                    map.put("name", name);
-                                    dateList.add(map);
+                                if (page == 1) {
+                                    lv_service.setAdapter(serviceAdapter);
+                                } else {
+                                    serviceAdapter.notifyDataSetChanged();
                                 }
                             }
-                            if (page == 1) {
-                                lv_service.setAdapter(serviceAdapter);
-                            } else {
-                                serviceAdapter.notifyDataSetChanged();
-                            }
+
                         } else {
                             Toast.makeText(getActivity(),
                                     jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
+                            view_nodate.setVisibility(View.GONE);
+                            lv_service.setVisibility(View.VISIBLE);
                         }
 
                     } catch (Exception e) {
@@ -285,6 +299,8 @@ public class ServiceFragment extends BaseFragment implements OnClickListener {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "服务器异常",
                                 Toast.LENGTH_SHORT).show();
+                        view_nodate.setVisibility(View.GONE);
+                        lv_service.setVisibility(View.VISIBLE);
                         dissmissDilog();
                     }
                 }

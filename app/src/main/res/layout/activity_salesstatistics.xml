@@ -250,6 +250,10 @@
             </LinearLayout>
         </LinearLayout>
 
+        <include layout="@layout/view_nodata"
+            android:id="@+id/view_nodate"
+            android:visibility="visible"/>
+
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/pullrefresh_table"
             android:layout_width="match_parent"
@@ -257,6 +261,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/lv_food_static"
+                android:visibility="gone"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"/>
 

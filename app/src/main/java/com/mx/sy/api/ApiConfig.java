@@ -161,6 +161,8 @@ public class ApiConfig {
 	public static String UPLOADCAIPINIMAGE = "/upload/updateImagesReturnUrl";
 	// 打印订单
 	public static String ORDERPRINT = "/order/print";
+	// 重新下订单
+	public static String ORDERREPRINT = "/order/reprint";
 	// 查询是否是会员
 	public static String FINDONEBYPHONE ="/user/customer/findOneByUserPhone";
 	// 根据日期段查询会员充值金额

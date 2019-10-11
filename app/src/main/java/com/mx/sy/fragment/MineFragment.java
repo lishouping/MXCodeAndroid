@@ -339,14 +339,14 @@ public class MineFragment extends BaseFragment {
             HashMap<String, Object> userInfoMap3 = new HashMap<String, Object>();
             userInfoMap3.put("content", "推送消息");
             userInfoMap3.put("contentImg", R.drawable.icon_tip);
-            userInfoMap3.put("mytypeImg", R.drawable.icon_my3);
+            userInfoMap3.put("mytypeImg", R.drawable.ic_new_16);
             userInfoMap3.put("isnbsp", "0");
             dateList.add(userInfoMap3);
 
             HashMap<String, Object> userInfoMap4 = new HashMap<String, Object>();
             userInfoMap4.put("content", "密码修改");
             userInfoMap4.put("contentImg", R.drawable.icon_tip);
-            userInfoMap4.put("mytypeImg", R.drawable.icon_my4);
+            userInfoMap4.put("mytypeImg", R.drawable.ic_new_13);
             userInfoMap4.put("isnbsp", "0");
             dateList.add(userInfoMap4);
 
@@ -354,14 +354,14 @@ public class MineFragment extends BaseFragment {
             HashMap<String, Object> userInfoMap7 = new HashMap<String, Object>();
             userInfoMap7.put("content", "意见反馈");
             userInfoMap7.put("contentImg", R.drawable.icon_tip);
-            userInfoMap7.put("mytypeImg", R.drawable.icon_my6);
+            userInfoMap7.put("mytypeImg", R.drawable.ic_new_17);
             userInfoMap7.put("isnbsp", "0");
             dateList.add(userInfoMap7);
 
             HashMap<String, Object> userInfoMap8 = new HashMap<String, Object>();
             userInfoMap8.put("content", "关于我们");
             userInfoMap8.put("contentImg", R.drawable.icon_tip);
-            userInfoMap8.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap8.put("mytypeImg", R.drawable.ic_new_10);
             userInfoMap8.put("isnbsp", "0");
             dateList.add(userInfoMap8);
 
@@ -371,7 +371,7 @@ public class MineFragment extends BaseFragment {
             HashMap<String, Object> userInfoMap1 = new HashMap<String, Object>();
             userInfoMap1.put("content", "销售统计");
             userInfoMap1.put("contentImg", R.drawable.icon_tip);
-            userInfoMap1.put("mytypeImg", R.drawable.icon_my1);
+            userInfoMap1.put("mytypeImg", R.drawable.ic_new_1);
             userInfoMap1.put("isnbsp", "0");
             dateList.add(userInfoMap1);
 
@@ -379,21 +379,21 @@ public class MineFragment extends BaseFragment {
             HashMap<String, Object> userInfoMapnew1 = new HashMap<String, Object>();
             userInfoMapnew1.put("content", "收款统计");
             userInfoMapnew1.put("contentImg", R.drawable.icon_tip);
-            userInfoMapnew1.put("mytypeImg", R.drawable.icon_my2);
+            userInfoMapnew1.put("mytypeImg", R.drawable.ic_new_15);
             userInfoMapnew1.put("isnbsp", "0");
             dateList.add(userInfoMapnew1);
 
             HashMap<String, Object> userInfoMapnew2 = new HashMap<String, Object>();
             userInfoMapnew2.put("content", "桌台统计");
             userInfoMapnew2.put("contentImg", R.drawable.icon_tip);
-            userInfoMapnew2.put("mytypeImg", R.drawable.icon_my2);
+            userInfoMapnew2.put("mytypeImg", R.drawable.ic_new_4);
             userInfoMapnew2.put("isnbsp", "0");
             dateList.add(userInfoMapnew2);
 
             HashMap<String, Object> userInfoMapnew3 = new HashMap<String, Object>();
             userInfoMapnew3.put("content", "会员统计");
             userInfoMapnew3.put("contentImg", R.drawable.icon_tip);
-            userInfoMapnew3.put("mytypeImg", R.drawable.icon_my2);
+            userInfoMapnew3.put("mytypeImg", R.drawable.ic_new_14);
             userInfoMapnew3.put("isnbsp", "0");
             dateList.add(userInfoMapnew3);
 
@@ -402,7 +402,7 @@ public class MineFragment extends BaseFragment {
             HashMap<String, Object> userInfoMap2 = new HashMap<String, Object>();
             userInfoMap2.put("content", "服务统计");
             userInfoMap2.put("contentImg", R.drawable.icon_tip);
-            userInfoMap2.put("mytypeImg", R.drawable.icon_my2);
+            userInfoMap2.put("mytypeImg", R.drawable.ic_new_9);
             userInfoMap2.put("isnbsp", "0");
             dateList.add(userInfoMap2);
 
@@ -410,84 +410,84 @@ public class MineFragment extends BaseFragment {
             HashMap<String, Object> userInfoMap3 = new HashMap<String, Object>();
             userInfoMap3.put("content", "推送消息");
             userInfoMap3.put("contentImg", R.drawable.icon_tip);
-            userInfoMap3.put("mytypeImg", R.drawable.icon_my3);
+            userInfoMap3.put("mytypeImg", R.drawable.ic_new_16);
             userInfoMap3.put("isnbsp", "0");
             dateList.add(userInfoMap3);
 
             HashMap<String, Object> userInfoMap4 = new HashMap<String, Object>();
             userInfoMap4.put("content", "密码修改");
             userInfoMap4.put("contentImg", R.drawable.icon_tip);
-            userInfoMap4.put("mytypeImg", R.drawable.icon_my4);
+            userInfoMap4.put("mytypeImg", R.drawable.ic_new_13);
             userInfoMap4.put("isnbsp", "1");
             dateList.add(userInfoMap4);
 
             HashMap<String, Object> userInfoMap7 = new HashMap<String, Object>();
             userInfoMap7.put("content", "意见反馈");
             userInfoMap7.put("contentImg", R.drawable.icon_tip);
-            userInfoMap7.put("mytypeImg", R.drawable.icon_my6);
+            userInfoMap7.put("mytypeImg", R.drawable.ic_new_17);
             userInfoMap7.put("isnbsp", "0");
             dateList.add(userInfoMap7);
 
             HashMap<String, Object> userInfoMap8 = new HashMap<String, Object>();
             userInfoMap8.put("content", "关于我们");
             userInfoMap8.put("contentImg", R.drawable.icon_tip);
-            userInfoMap8.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap8.put("mytypeImg", R.drawable.ic_new_10);
             userInfoMap8.put("isnbsp", "0");
             dateList.add(userInfoMap8);
 
             HashMap<String, Object> userInfoMap9 = new HashMap<String, Object>();
             userInfoMap9.put("content", "店铺管理");
             userInfoMap9.put("contentImg", R.drawable.icon_tip);
-            userInfoMap9.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap9.put("mytypeImg", R.drawable.ic_new_8);
             userInfoMap9.put("isnbsp", "1");
             dateList.add(userInfoMap9);
 
             HashMap<String, Object> userInfoMap5 = new HashMap<String, Object>();
             userInfoMap5.put("content", "打印机设置");
             userInfoMap5.put("contentImg", R.drawable.icon_tip);
-            userInfoMap5.put("mytypeImg", R.drawable.icon_my5);
+            userInfoMap5.put("mytypeImg", R.drawable.ic_new_7);
             userInfoMap5.put("isnbsp", "0");
             dateList.add(userInfoMap5);
 
             HashMap<String, Object> userInfoMap10 = new HashMap<String, Object>();
             userInfoMap10.put("content", "员工管理");
             userInfoMap10.put("contentImg", R.drawable.icon_tip);
-            userInfoMap10.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap10.put("mytypeImg", R.drawable.ic_new_12);
             userInfoMap10.put("isnbsp", "0");
             dateList.add(userInfoMap10);
 
             HashMap<String, Object> userInfoMap11 = new HashMap<String, Object>();
             userInfoMap11.put("content", "桌台分区");
             userInfoMap11.put("contentImg", R.drawable.icon_tip);
-            userInfoMap11.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap11.put("mytypeImg", R.drawable.ic_new_5);
             userInfoMap11.put("isnbsp", "0");
             dateList.add(userInfoMap11);
 
             HashMap<String, Object> userInfoMap12 = new HashMap<String, Object>();
             userInfoMap12.put("content", "桌台管理");
             userInfoMap12.put("contentImg", R.drawable.icon_tip);
-            userInfoMap12.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap12.put("mytypeImg", R.drawable.ic_new_6);
             userInfoMap12.put("isnbsp", "0");
             dateList.add(userInfoMap12);
 
             HashMap<String, Object> userInfoMap13 = new HashMap<String, Object>();
             userInfoMap13.put("content", "菜品分类");
             userInfoMap13.put("contentImg", R.drawable.icon_tip);
-            userInfoMap13.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap13.put("mytypeImg", R.drawable.ic_new_2);
             userInfoMap13.put("isnbsp", "0");
             dateList.add(userInfoMap13);
 
             HashMap<String, Object> userInfoMap14 = new HashMap<String, Object>();
             userInfoMap14.put("content", "菜品管理");
             userInfoMap14.put("contentImg", R.drawable.icon_tip);
-            userInfoMap14.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap14.put("mytypeImg", R.drawable.ic_new_3);
             userInfoMap14.put("isnbsp", "0");
             dateList.add(userInfoMap14);
 
             HashMap<String, Object> userInfoMap15 = new HashMap<String, Object>();
             userInfoMap15.put("content", "会员查询");
             userInfoMap15.put("contentImg", R.drawable.icon_tip);
-            userInfoMap15.put("mytypeImg", R.drawable.icon_my7);
+            userInfoMap15.put("mytypeImg", R.drawable.ic_new_11);
             userInfoMap15.put("isnbsp", "0");
             dateList.add(userInfoMap15);
 

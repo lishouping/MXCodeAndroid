@@ -57,6 +57,8 @@ public class MemberStatisticsActivity  extends BaseActivity {
     private MyAdapter myAdapter;
     private List<HashMap<String,String>> myList = new ArrayList<>();
 
+    private View  view_nodata;
+
     @Override
     public void widgetClick(View v) {
         switch (v.getId()) {
@@ -121,7 +123,7 @@ public class MemberStatisticsActivity  extends BaseActivity {
     public void initView(View view) {
         preferences = getSharedPreferences("userinfo",
                 LoginActivity.MODE_PRIVATE);
-
+        view_nodata = findViewById(R.id.view_nodate);
         ll_back = $(R.id.ll_back);
         tv_title = $(R.id.tv_title);
         iv_icon = $(R.id.iv_icon);
@@ -279,30 +281,42 @@ public class MemberStatisticsActivity  extends BaseActivity {
                         if (CODE.equals("0")) {
 
                             JSONArray jsonArray = new JSONArray(jsonObject.getString("data"));
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                String user_count = object
-                                        .getString("user_count");
-                                String create_date = object.getString("create_date");
+                            if (jsonArray.length()==0){
+                                view_nodata.setVisibility(View.VISIBLE);
+                                rv_member_statics.setVisibility(View.GONE);
+                            }else {
+                                view_nodata.setVisibility(View.GONE);
+                                rv_member_statics.setVisibility(View.VISIBLE);
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    String user_count = object
+                                            .getString("user_count");
+                                    String create_date = object.getString("create_date");
 
-                                HashMap<String,String> map = new HashMap<>();
-                                map.put("user_count", user_count);
-                                map.put("create_date", create_date);// 销售数量
-                                myList.add(map);
+                                    HashMap<String,String> map = new HashMap<>();
+                                    map.put("user_count", user_count);
+                                    map.put("create_date", create_date);// 销售数量
+                                    myList.add(map);
+                                }
+
+                                myAdapter.notifyDataSetChanged();
                             }
 
-                            myAdapter.notifyDataSetChanged();
 
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("msg"),
                                     Toast.LENGTH_SHORT).show();
+                            view_nodata.setVisibility(View.VISIBLE);
+                            rv_member_statics.setVisibility(View.GONE);
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "服务器异常",
                                 Toast.LENGTH_SHORT).show();
+                        view_nodata.setVisibility(View.VISIBLE);
+                        rv_member_statics.setVisibility(View.GONE);
                     }
                 }
             }

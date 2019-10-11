@@ -76,7 +76,9 @@
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
         android:background="@color/circle_mine" />
-
+    <include layout="@layout/view_nodata"
+        android:id="@+id/view_nodate"
+        android:visibility="visible"/>
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/pullrefresh_service"
         android:layout_width="match_parent"
@@ -85,7 +87,8 @@
         <ListView
             android:id="@+id/lv_service"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"></ListView>
+            android:layout_height="fill_parent"
+            android:visibility="gone"></ListView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

@@ -2,17 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
     <include layout="@layout/common_title" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -21,7 +23,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_edit_bg"
                 android:gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_start_time"
@@ -47,7 +49,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_edit_bg"
                 android:gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/btn_end_time"
                     android:layout_width="0dp"
@@ -68,73 +71,89 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="30dp"
-        android:orientation="horizontal"
         android:background="@color/gray_btn_bg_pressed_color"
-        >
+        android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
             android:layout_weight="1.5"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
                 android:layout_marginLeft="15dp"
+                android:text="餐桌号"
                 android:textColor="@color/suborder_color"
-                android:text="餐桌号"/>
+                android:textSize="13sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="订单数量"
                 android:textColor="@color/suborder_color"
-                android:text="订单数量"/>
+                android:textSize="13sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_weight="1">
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="销售数量"
                 android:textColor="@color/suborder_color"
-                android:text="销售数量"/>
+                android:textSize="13sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_weight="1">
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:text="销售金额"
                 android:textColor="@color/suborder_color"
-                android:text="销售金额"/>
+                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
+
+    <include
+        android:id="@+id/view_nodate"
+        layout="@layout/view_nodata"
+        android:visibility="visible" />
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/pullrefresh_table"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_static"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
