@@ -16,7 +16,7 @@ import com.mx.sy.base.BaseActivity;
 * <p>Description: 关于我们<／p>
 * <p>Company: LTGames<／p> 
 * @author lishp
-* @date 2017年7月23日
+* @date 2017年7月23日 add
  */
 public class AboutUsActivity extends BaseActivity{
 	private LinearLayout ll_back;
