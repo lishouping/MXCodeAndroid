@@ -55,6 +55,7 @@ public class ManageTableAddActivity extends BaseActivity {
     private String people_count;
     private String area_name;
     private String table_id;
+    private String areaName;
 
 
     @Override
@@ -156,9 +157,10 @@ public class ManageTableAddActivity extends BaseActivity {
 
         if (pagetype.equals("1")) {
             //添加
-
+            tv_title.setText("新增桌台");
         } else {
             //修改
+            tv_title.setText("修改桌台");
             table_id = getIntent().getStringExtra("table_id");
             getOneTable();
         }
@@ -166,7 +168,6 @@ public class ManageTableAddActivity extends BaseActivity {
 
     @Override
     protected void initdata() {
-        tv_title.setText("新增桌台");
         classList = new ArrayList<>();
     }
 
@@ -217,6 +218,7 @@ public class ManageTableAddActivity extends BaseActivity {
                                 map.put("create_time", create_time);
                                 classList.add(map);
                             }
+                            selectAirName(airid);
                             dishesSelectClassAdapter.notifyDataSetChanged();
                         }
 
@@ -233,6 +235,17 @@ public class ManageTableAddActivity extends BaseActivity {
                                   Throwable arg3) {
             }
         });
+    }
+
+    // 查询分区名
+    private void selectAirName(String airid){
+        for (int i=0;i<classList.size();i++){
+            if (airid.equals(classList.get(i).get("area_id"))){
+                areaName = classList.get(i).get("classname");
+                select_table_partition.setText(areaName);
+                break;
+            }
+        }
     }
 
     // 添加桌台
@@ -359,7 +372,6 @@ public class ManageTableAddActivity extends BaseActivity {
                             et_table_name.setText(jsonObject1.getString("table_name"));
                             et_table_number.setText(jsonObject1.getString("people_count"));
                             airid = jsonObject1.getString("area_id");
-//            select_table_partition.setText(area_name);
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),
