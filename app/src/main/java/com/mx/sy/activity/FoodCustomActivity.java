@@ -67,6 +67,8 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 	private List<HashMap<String, String>> disNameList;
 	private DishesNameAdapter dishesNameAdapter;
 
+	private List<HashMap<String,String>> allDisNameList;
+
 	private Button btn_price_dis, btn_place_order;
 
 	private ImageView imgshopingcar;// 购物车按钮
@@ -221,6 +223,8 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 			}
 		});
 
+		allDisNameList = new ArrayList<>();
+
 		disNameList = new ArrayList<HashMap<String, String>>();
 		dishesNameAdapter = new DishesNameAdapter(FoodCustomActivity.this,
 				disNameList, R.layout.item_discname);
@@ -304,6 +308,8 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 							setTableGoodsInfo(
 									disclassList.get(0).get("category_name")
 											+ "", 0);
+
+							getAllDisheList();
 						} else {
 							Toast.makeText(getApplicationContext(),
 									jsonObject.getString("MESSAGE"),
@@ -413,14 +419,48 @@ public class FoodCustomActivity extends BaseActivity implements SendMessage {
 	}
 
 	/**
+	 * 查询所有分类下的所有菜品用于查询
+	 */
+	private void getAllDisheList(){
+		if (allDisNameList.size()>0){
+			allDisNameList.clear();
+		}
+		for (int i = 0; i < disclassList.size(); i++) {
+			try {
+				JSONArray array = (JSONArray) disclassList.get(i).get(
+						"goods_list");
+				for (int j = 0; j < array.length(); j++) {
+					JSONObject object2 = array.getJSONObject(j);
+					String goods_name = object2.getString("goods_name");// 菜品名
+					String pre_price = object2.getString("pre_price");// 单价
+					String good_id = object2.getString("good_id");// 商品id
+					HashMap<String, String> map4 = new HashMap<String, String>();
+					map4.put("goods_name", goods_name);
+					map4.put("pre_price", pre_price);
+					map4.put("good_id", good_id);
+					if (object2.getString("good_exts_flag").equals("1")) {
+						map4.put("good_exts_flag", object2.getString("good_exts_flag"));
+						JSONArray array2 = new JSONArray(object2.getString("goods_exts_list"));
+						map4.put("goods_exts_list", array2+"");
+					}else {
+						map4.put("good_exts_flag", "0");
+					}
+					allDisNameList.add(map4);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	/**
 	 * 查询菜品名
 	 */
 	private void getDisheName(String content){
-		if (disNameList.size() > 0){
-			for (int i = 0; i < disNameList.size(); i++) {
+		if (allDisNameList.size() > 0){
+			for (int i = 0; i < allDisNameList.size(); i++) {
 
-				if (content.contains(disNameList.get(i).get("goods_name"))){
-					HashMap<String, String> map = disNameList.get(i);
+				if (content.contains(allDisNameList.get(i).get("goods_name"))){
+					HashMap<String, String> map = allDisNameList.get(i);
 					disNameList.clear();
 					disNameList.add(map);
 					dishesNameAdapter.notifyDataSetChanged();
