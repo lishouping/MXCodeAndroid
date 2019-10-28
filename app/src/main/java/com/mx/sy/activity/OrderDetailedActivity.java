@@ -68,6 +68,7 @@ public class OrderDetailedActivity extends BaseActivity {
     private Button btn_dayin_order;// 打印
 
     private TextView tv_ordertotal_price;
+    private String mTotalPrice = "";
 
     private SharedPreferences preferences;
     private String order_id;
@@ -243,22 +244,26 @@ public class OrderDetailedActivity extends BaseActivity {
                         alertDialog1.dismiss();
                         if (index == 0) {
                             check_way = "1";
+                            check();
                         } else if (index == 1) {
                             check_way = "2";
+                            check();
                         } else if (index == 2) {
                             check_way = "3";
+                            check();
                         } else if (index == 3) {
                             Intent intent = new Intent(OrderDetailedActivity.this, MipcaActivityCapture.class);
                             intent.putExtra("pageType", "1");
                             intent.putExtra("order_id",order_id );
+                            intent.putExtra("totalPrice",mTotalPrice);
                             startActivity(intent);
                         } else if (index == 4) {
                             Intent intent = new Intent(OrderDetailedActivity.this, MipcaActivityCapture.class);
                             intent.putExtra("pageType", "2");
                             intent.putExtra("order_id",order_id );
+                            intent.putExtra("totalPrice",mTotalPrice);
                             startActivity(intent);
                         }
-                        check();
                     }
                 });
                 alertDialog1 = alertBuilder.create();
@@ -551,6 +556,7 @@ public class OrderDetailedActivity extends BaseActivity {
 
                             String total_price = cartobj
                                     .getString("total_price");
+                            mTotalPrice = total_price;
                             tv_ordertotal_price.setText(total_price + "元");
 
                             JSONArray jsonArray = cartobj

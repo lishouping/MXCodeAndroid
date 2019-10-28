@@ -150,11 +150,11 @@ public class ApiConfig {
 	// 服务员统计
 	public static String GETWIRITESTATIS = "/statics/getWaiterStatics";
 	// WxPay
-	public static String WXPAY = "/order/wxPayment";
+	public static String WXPAY = "/order/wxScanPayment";
 	// AlPay
-	public static String ALPAY = "/order/alipayPayment";
+	public static String ALPAY = "/order/alipayScanPayment";
 	// 校验是否成功
-	public static String CHECKPAY = "/order/checkOrderPayment";
+	public static String CHECKPAY = "/order/checkScanPaymentStatus";
 	// 店铺图修改
 	public static String UPLOADIMAGE = "/upload/uploadShopImage";
 	// 菜品图片上传
@@ -171,4 +171,14 @@ public class ApiConfig {
 	public static String GETUSERCOUNT = "/statistics/getUserCountByDate";
 	// 根据日期查询会员新开数量图表
 	public static String GETUSERCHARTS = "/statistics/getUserChartsByDate";
+	// 会员卡消费
+	public static String CONSUMEADD = "/consume/add";
+	// 加载个人优惠券
+	public static String CONSUMEFINDUSERBYSHOP = "/coupons/use/findEnableByUserAndShop";
+	// 查询店铺满减活动
+	public static String FINDLISTSHOP = "/manjian/findListByShop";
+	//查询店铺折扣配置
+	public static String FINDLISTBYSHOP = "/realdiscount/findListByShop";
+
+
 }

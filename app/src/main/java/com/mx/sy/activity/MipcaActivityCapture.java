@@ -33,6 +33,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mx.sy.R;
 import com.mx.sy.api.ApiConfig;
+import com.mx.sy.dialog.SweetAlertDialog;
 import com.mx.sy.zxing.camera.CameraManager;
 import com.mx.sy.zxing.decoding.CaptureActivityHandler;
 import com.mx.sy.zxing.decoding.InactivityTimer;
@@ -67,7 +68,12 @@ public class MipcaActivityCapture extends Activity implements Callback {
      */
     private String pageType;
     private String order_id;
+    private String totalPrice;
+    private SharedPreferences preferences;
+    private String out_trade_no = "";
+    private String checkWay;
 
+    public SweetAlertDialog sweetAlertDialog;
     /**
      * Called when the activity is first created.
      */
@@ -85,6 +91,9 @@ public class MipcaActivityCapture extends Activity implements Callback {
         tv_title = (TextView) findViewById(R.id.tv_title);
         tv_title.setText("扫码点餐");
 
+        preferences = getSharedPreferences("userinfo",
+                LoginActivity.MODE_PRIVATE);
+
         LinearLayout mButtonBack = (LinearLayout) findViewById(R.id.ll_back);
         mButtonBack.setOnClickListener(new OnClickListener() {
 
@@ -99,7 +108,9 @@ public class MipcaActivityCapture extends Activity implements Callback {
 
         pageType = getIntent().getStringExtra("pageType");
         order_id = getIntent().getStringExtra("order_id");
+        totalPrice = getIntent().getStringExtra("totalPrice");
 
+        sweetAlertDialog = new SweetAlertDialog(this ,SweetAlertDialog.PROGRESS_TYPE);
     }
 
     @Override
@@ -176,9 +187,11 @@ public class MipcaActivityCapture extends Activity implements Callback {
 
             }
         } else if (pageType.equals("1")) {
-            pay(pageType,order_id,resultString);
+            checkWay = "2";
+            pay(pageType, order_id, resultString);
         } else if (pageType.equals("2")) {
-            pay(pageType,order_id,resultString);
+            checkWay = "3";
+            pay(pageType, order_id, resultString);
         }
     }
 
@@ -287,16 +300,20 @@ public class MipcaActivityCapture extends Activity implements Callback {
 
     // 扫码支付
     public void pay(String type, final String order_id, String client_no) {
+        sweetAlertDialog.setTitleText("支付中...");
         AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
         String url = "";
-        if (type.equals("1")){
+        if (type.equals("1")) {
             url = ApiConfig.API_URL + ApiConfig.WXPAY;
-        }else if (type.equals("2")){
+        } else if (type.equals("2")) {
             url = ApiConfig.API_URL + ApiConfig.ALPAY;
         }
         RequestParams params = new RequestParams();
         params.put("client_no", client_no);
-        params.put("order_id",order_id);
+        params.put("shop_id", preferences.getString("shop_id", ""));
+        params.put("fee", totalPrice);
         client.post(url, params, new AsyncHttpResponseHandler() {
 
             @Override
@@ -309,11 +326,61 @@ public class MipcaActivityCapture extends Activity implements Callback {
                         JSONObject jsonObject = new JSONObject(response);
                         String CODE = jsonObject.getString("CODE");
                         if (CODE.equals("1000")) {
-                            checkpay(order_id);
+                            check(checkWay);
+//                            out_trade_no = jsonObject.getString("DATA");
+//                            checkpay(out_trade_no);
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
+                            sweetAlertDialog.dismiss();
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "服务器异常",
+                                Toast.LENGTH_SHORT).show();
+                        sweetAlertDialog.dismiss();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int arg0, Header[] arg1, byte[] arg2,
+                                  Throwable arg3) {
+                // TODO Auto-generated method stub
+                Toast.makeText(getApplicationContext(), "服务器异常",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // 验证
+    public void checkpay(String mout_trade_no) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.CHECKPAY + "/" + mout_trade_no + "/"
+                + preferences.getString("shop_id", "");
+        RequestParams params = new RequestParams();
+        client.get(url, params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
+                // TODO Auto-generated method stub
+                if (arg0 == 200) {
+                    try {
+                        String response = new String(arg2, "UTF-8");
+                        com.orhanobut.logger.Logger.d(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        String CODE = jsonObject.getString("CODE");
+                        if (CODE.equals("1000")) {
+                            check(checkWay);
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    jsonObject.getString("MESSAGE"),
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
@@ -334,13 +401,16 @@ public class MipcaActivityCapture extends Activity implements Callback {
         });
     }
 
-    // 验证
-    public void checkpay(String order_id) {
+    // 结账/order/check
+    public void check(String check_way) {
         AsyncHttpClient client = new AsyncHttpClient();
-        String url = ApiConfig.API_URL + ApiConfig.CHECKPAY;
+        client.addHeader("key", preferences.getString("loginkey", ""));
+        client.addHeader("id", preferences.getString("userid", ""));
+        String url = ApiConfig.API_URL + ApiConfig.CHECK_URL;
         RequestParams params = new RequestParams();
-        params.put("order_id",order_id);
-        client.get(url, params, new AsyncHttpResponseHandler() {
+        params.put("order_id", order_id);
+        params.put("check_way", check_way);
+        client.post(url, params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
@@ -355,23 +425,19 @@ public class MipcaActivityCapture extends Activity implements Callback {
                             Toast.makeText(getApplicationContext(),
                                     jsonObject.getString("MESSAGE"),
                                     Toast.LENGTH_SHORT).show();
-                            if (OrderDetailedActivity.initactivitActivity!=null){
+                            if (OrderDetailedActivity.initactivitActivity != null) {
                                 OrderDetailedActivity.initactivitActivity.finish();
                                 OrderDetailedActivity.initactivitActivity = null;
                             }
-
                             finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    jsonObject.getString("MESSAGE"),
-                                    Toast.LENGTH_SHORT).show();
-                            finish();
+                            sweetAlertDialog.dismiss();
                         }
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), "服务器异常",
                                 Toast.LENGTH_SHORT).show();
+                        sweetAlertDialog.dismiss();
                     }
                 }
             }
@@ -381,7 +447,8 @@ public class MipcaActivityCapture extends Activity implements Callback {
                                   Throwable arg3) {
                 // TODO Auto-generated method stub
                 Toast.makeText(getApplicationContext(), "服务器异常",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
+                sweetAlertDialog.dismiss();
             }
         });
     }

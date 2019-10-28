@@ -72,11 +72,13 @@ public class StatisticalAnalysisActivity extends BaseActivity {
 
     @Override
     public void initView(View view) {
-
         ll_back = $(R.id.ll_back);
         tv_title = $(R.id.tv_title);
-        tv_title.setText("统计分析");
-
+        if (pageType.equals("1")){
+            tv_title.setText("统计分析");
+        }else {
+            tv_title.setText("系统设置");
+        }
         rv_static_analysis = findViewById(R.id.rv_static_analysis);
 
     }
