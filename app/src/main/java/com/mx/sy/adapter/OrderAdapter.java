@@ -162,22 +162,27 @@ public class OrderAdapter extends CommonBaseAdapter<HashMap<String, String>> {
                                     alertDialog1.dismiss();
                                     if (index == 0) {
                                         check_way = "1";
+                                        check(bean.get("order_id"), holder.getPosition(), check_way);
                                     } else if (index == 1) {
                                         check_way = "2";
+                                        check(bean.get("order_id"), holder.getPosition(), check_way);
                                     } else if (index == 2) {
                                         check_way = "3";
+                                        check(bean.get("order_id"), holder.getPosition(), check_way);
                                     } else if (index == 3) {
                                         Intent intent = new Intent(context, MipcaActivityCapture.class);
                                         intent.putExtra("pageType", "1");
                                         intent.putExtra("order_id",bean.get("order_id") );
+                                        intent.putExtra("totalPrice",bean.get("payment"));
                                         context.startActivity(intent);
                                     } else if (index == 4) {
                                         Intent intent = new Intent(context, MipcaActivityCapture.class);
                                         intent.putExtra("pageType", "2");
                                         intent.putExtra("order_id",bean.get("order_id") );
+                                        intent.putExtra("totalPrice",bean.get("payment"));
                                         context.startActivity(intent);
                                     }
-                                    check(bean.get("order_id"), holder.getPosition(), check_way);
+
                                 }
                             });
                             alertDialog1 = alertBuilder.create();

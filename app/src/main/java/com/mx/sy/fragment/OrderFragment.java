@@ -313,6 +313,7 @@ public class OrderFragment extends BaseFragment implements OnClickListener {
                                     String order_id = object.getString("order_id");
                                     String order_num = object.getString("order_num");
                                     String table_id = object.getString("table_id");
+                                    String payment = object.getString("payment");
                                     String order_time = null;
                                     if (selectBtnFlag == 0) {
                                         order_time = object.getString("create_time");
@@ -350,6 +351,7 @@ public class OrderFragment extends BaseFragment implements OnClickListener {
                                     map.put("status", status);
                                     map.put("table_name", table_name);
                                     map.put("people_count", people_count);
+                                    map.put("payment",payment);
                                     if (selectBtnFlag == 0) {
                                         map.put("name", "");
                                     } else {
