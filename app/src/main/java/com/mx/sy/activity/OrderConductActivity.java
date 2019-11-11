@@ -103,32 +103,36 @@ public class OrderConductActivity extends BaseActivity {
         alertBuilder.setTitle("请选择付款方式");  
         alertBuilder.setItems(items, new DialogInterface.OnClickListener() {  
             @Override  
-            public void onClick(DialogInterface arg0, int index) {  
-                alertDialog1.dismiss();  
-                if (index==0) {
-					check_way = "1";
-					check();
-				}else if (index==1) {
-					check_way = "2";
-					check();
-				}else if (index==2) {
-					check_way = "3";
-					check();
-				} else if (index == 3) {
-					Intent intent = new Intent(OrderConductActivity.this, MipcaActivityCapture.class);
-					intent.putExtra("pageType", "1");
-					intent.putExtra("order_id",order_id );
-					intent.putExtra("totalPrice",mTotalPrice);
-					startActivity(intent);
-				} else if (index == 4) {
-					Intent intent = new Intent(OrderConductActivity.this, MipcaActivityCapture.class);
-					intent.putExtra("pageType", "2");
-					intent.putExtra("order_id",order_id );
-					intent.putExtra("totalPrice",mTotalPrice);
-					startActivity(intent);
-				}
+            public void onClick(DialogInterface arg0, int index) {
 
-            }  
+				if (preferences.getString("if_check", "").equals("1")){
+					alertDialog1.dismiss();
+					if (index==0) {
+						check_way = "1";
+						check();
+					}else if (index==1) {
+						check_way = "2";
+						check();
+					}else if (index==2) {
+						check_way = "3";
+						check();
+					} else if (index == 3) {
+						Intent intent = new Intent(OrderConductActivity.this, MipcaActivityCapture.class);
+						intent.putExtra("pageType", "1");
+						intent.putExtra("order_id",order_id );
+						intent.putExtra("totalPrice",mTotalPrice);
+						startActivity(intent);
+					} else if (index == 4) {
+						Intent intent = new Intent(OrderConductActivity.this, MipcaActivityCapture.class);
+						intent.putExtra("pageType", "2");
+						intent.putExtra("order_id",order_id );
+						intent.putExtra("totalPrice",mTotalPrice);
+						startActivity(intent);
+					}
+				}else {
+					Toast.makeText(OrderConductActivity.this,"暂无此权限",Toast.LENGTH_SHORT).show();
+				}
+            }
         });  
         alertDialog1 = alertBuilder.create();  
         alertDialog1.show();  

@@ -153,6 +153,7 @@ public class LoginActivity extends BaseActivity {
 		params.put("user_name", edit_user.getText().toString());
 		params.put("password", edit_pass.getText().toString());
 		params.put("type", "2");// Number 1:商户，2:管理员，3:个人用户，4:超级管理员
+		params.put("from","3");
 		client.post(url, params, new AsyncHttpResponseHandler() {
 
 			@Override
@@ -178,6 +179,7 @@ public class LoginActivity extends BaseActivity {
 							String name = object2.getString("name");
 							String business_id = object.getString("business_id");
 							String role_id = object.getString("role_id");
+							String if_check = object2.getString("if_check");
 
 							preferences.edit().putString("userid", business_id)
 									.commit();
@@ -192,6 +194,8 @@ public class LoginActivity extends BaseActivity {
 							preferences.edit().putString("password", edit_pass.getText().toString()).commit();
 							
 							preferences.edit().putString("role_id", role_id).commit();
+
+							preferences.edit().putString("if_check", if_check).commit();
 
 							/**
 							 * 极光推送别名设置
