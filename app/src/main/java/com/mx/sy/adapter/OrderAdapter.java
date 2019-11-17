@@ -152,41 +152,44 @@ public class OrderAdapter extends CommonBaseAdapter<HashMap<String, String>> {
                         @Override
                         public void onClick(View arg0) {
                             // TODO Auto-generated method stub
+                            if (preferences.getString("if_check", "").equals("1")){
+                                final String[] items = {"现金", "微信", "支付宝", "微信扫码付", "支付宝扫码付"};
+                                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+                                alertBuilder.setTitle("请选择付款方式");
+                                alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface arg0, int index) {
+                                        alertDialog1.dismiss();
+                                        if (index == 0) {
+                                            check_way = "1";
+                                            check(bean.get("order_id"), holder.getPosition(), check_way);
+                                        } else if (index == 1) {
+                                            check_way = "2";
+                                            check(bean.get("order_id"), holder.getPosition(), check_way);
+                                        } else if (index == 2) {
+                                            check_way = "3";
+                                            check(bean.get("order_id"), holder.getPosition(), check_way);
+                                        } else if (index == 3) {
+                                            Intent intent = new Intent(context, MipcaActivityCapture.class);
+                                            intent.putExtra("pageType", "1");
+                                            intent.putExtra("order_id",bean.get("order_id") );
+                                            intent.putExtra("totalPrice",bean.get("payment"));
+                                            context.startActivity(intent);
+                                        } else if (index == 4) {
+                                            Intent intent = new Intent(context, MipcaActivityCapture.class);
+                                            intent.putExtra("pageType", "2");
+                                            intent.putExtra("order_id",bean.get("order_id") );
+                                            intent.putExtra("totalPrice",bean.get("payment"));
+                                            context.startActivity(intent);
+                                        }
 
-                            final String[] items = {"现金", "微信", "支付宝", "微信扫码付", "支付宝扫码付"};
-                            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-                            alertBuilder.setTitle("请选择付款方式");
-                            alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface arg0, int index) {
-                                    alertDialog1.dismiss();
-                                    if (index == 0) {
-                                        check_way = "1";
-                                        check(bean.get("order_id"), holder.getPosition(), check_way);
-                                    } else if (index == 1) {
-                                        check_way = "2";
-                                        check(bean.get("order_id"), holder.getPosition(), check_way);
-                                    } else if (index == 2) {
-                                        check_way = "3";
-                                        check(bean.get("order_id"), holder.getPosition(), check_way);
-                                    } else if (index == 3) {
-                                        Intent intent = new Intent(context, MipcaActivityCapture.class);
-                                        intent.putExtra("pageType", "1");
-                                        intent.putExtra("order_id",bean.get("order_id") );
-                                        intent.putExtra("totalPrice",bean.get("payment"));
-                                        context.startActivity(intent);
-                                    } else if (index == 4) {
-                                        Intent intent = new Intent(context, MipcaActivityCapture.class);
-                                        intent.putExtra("pageType", "2");
-                                        intent.putExtra("order_id",bean.get("order_id") );
-                                        intent.putExtra("totalPrice",bean.get("payment"));
-                                        context.startActivity(intent);
                                     }
-
-                                }
-                            });
-                            alertDialog1 = alertBuilder.create();
-                            alertDialog1.show();
+                                });
+                                alertDialog1 = alertBuilder.create();
+                                alertDialog1.show();
+                            }else{
+                                Toast.makeText(context,"暂无此权限",Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
 
